@@ -74,6 +74,9 @@
       <button onclick="navigateTo('onboarding')" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors">
         Welcome Screen
       </button>
+      <button onclick="app.openVerificationModal('pass')" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 transition-colors">
+        UMS Verification
+      </button>
       <button onclick="toggleDeviceView()" id="btn-device-view" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors flex items-center gap-1.5">
         <span id="view-mode-label">Mobile View</span>
       </button>
@@ -960,7 +963,10 @@
                   <span class="text-indigo-600">${HUGE_ICONS.pin}</span>
                   <span class="font-bold text-slate-900">Universiti Malaysia Sabah (UMS)</span>
                 </div>
-                <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">Verified Campus</span>
+                <button onclick="app.openVerificationModal('pass')" class="text-xs font-bold ${this.user.isUmsVerified ? 'text-emerald-800 bg-emerald-50' : 'text-amber-800 bg-amber-50'} px-2.5 py-1 rounded-lg flex items-center gap-1">
+                  ${HUGE_ICONS.shield}
+                  <span>${this.user.isUmsVerified ? 'UMS Verified' : 'Verify UMS ID'}</span>
+                </button>
               </div>
 
               <div onclick="navigateTo('explore')" class="cursor-pointer bg-white border border-slate-200 rounded-2xl px-4 py-3 flex items-center gap-3 text-slate-400 transition-colors">
@@ -1879,10 +1885,10 @@
           <div class="p-4 space-y-4">
             <div class="bg-white border border-slate-200 rounded-3xl p-5 text-center space-y-2">
               <div class="flex justify-between items-center">
-                <span class="text-xs font-bold bg-emerald-50 text-emerald-800 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                  ${HUGE_ICONS.check}
-                  <span>UMS Verified Student</span>
-                </span>
+                <button onclick="app.openVerificationModal('pass')" class="text-xs font-bold ${u.isUmsVerified ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'} px-2.5 py-1 rounded-full flex items-center gap-1">
+                  ${u.isUmsVerified ? HUGE_ICONS.check : HUGE_ICONS.shield}
+                  <span>${u.isUmsVerified ? 'UMS Verified Student' : 'Unverified • Tap to Verify'}</span>
+                </button>
                 <button onclick="navigateTo('settings')" class="text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-xl flex items-center gap-1">
                   ${HUGE_ICONS.settings}
                   <span>Settings &amp; Safety</span>
@@ -1894,9 +1900,13 @@
               <p class="text-xs text-slate-500">${u.matricNumber} • ${u.faculty}</p>
               <p class="text-xs text-slate-600">${u.bio}</p>
 
-              <div class="pt-2 flex justify-center gap-2">
-                <button onclick="app.openEditProfileModal()" class="px-3.5 py-2 bg-slate-100 text-slate-800 rounded-xl text-xs font-bold">Edit Profile</button>
-                <button onclick="navigateTo('subscription')" class="px-3.5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
+              <div class="pt-2 flex flex-wrap justify-center gap-2">
+                <button onclick="app.openVerificationModal('pass')" class="px-3 py-2 bg-emerald-50 text-emerald-800 rounded-xl text-xs font-bold flex items-center gap-1">
+                  ${HUGE_ICONS.shield}
+                  <span>UMS Digital ID</span>
+                </button>
+                <button onclick="app.openEditProfileModal()" class="px-3 py-2 bg-slate-100 text-slate-800 rounded-xl text-xs font-bold">Edit Profile</button>
+                <button onclick="navigateTo('subscription')" class="px-3 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
                   ${u.subscriptionPlan === 'plus' ? 'ActiMate Plus Active' : 'Upgrade to Plus (RM4.90)'}
                 </button>
               </div>
@@ -2066,6 +2076,10 @@
               <h4 class="font-extrabold text-slate-900 text-sm">Community &amp; Prototype Info</h4>
               <p class="text-slate-600">All payments, verification badges, and chats are simulated locally with mock state for lecturer demonstration.</p>
               <div class="pt-2 flex flex-col gap-2">
+                <button onclick="app.openVerificationModal('pass')" class="py-2.5 px-3 bg-emerald-50 text-emerald-800 rounded-xl font-bold text-left flex items-center justify-between">
+                  <span>UMS Student Verification &amp; Digital ID</span>
+                  <span>${this.user.isUmsVerified ? 'Verified' : 'Unverified'}</span>
+                </button>
                 <button onclick="app.showReliabilityModal()" class="py-2.5 px-3 bg-slate-100 rounded-xl font-bold text-slate-800 text-left">View Reliability &amp; Cancellation Rules</button>
                 <button onclick="app.resetData()" class="py-2.5 px-3 bg-slate-100 rounded-xl font-bold text-slate-800 text-left">Reset Prototype Local Data</button>
                 <button onclick="navigateTo('onboarding')" class="py-2.5 px-3 bg-rose-50 text-rose-700 rounded-xl font-bold text-left">Sign Out to Welcome Screen</button>
@@ -2227,14 +2241,254 @@
         `);
       }
 
-      showAuthModal() {
-        openModal(`
-          <div class="space-y-3 text-left text-xs">
-            <h3 class="text-sm font-extrabold text-slate-900">UMS Student Verification</h3>
-            <input type="email" value="farhan.azman@student.ums.edu.my" class="w-full border border-slate-200 rounded-xl px-3 py-2" />
-            <button onclick="closeModal(); app.completeOnboarding();" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl">Verify &amp; Sign In</button>
-          </div>
-        `);
+      showAuthModal(mode = 'signin') {
+        this.openVerificationModal(mode === 'signup' ? 'verify_step1' : (mode === 'signin' ? 'verify_step1' : 'pass'));
+      }
+
+      openVerificationModal(step = 'pass') {
+        const u = this.user;
+        if (!this.verifyDraft) {
+          this.verifyDraft = {
+            name: u.name,
+            matricNumber: u.matricNumber || 'BI21110342',
+            email: u.email || 'farhan.azman@student.ums.edu.my',
+            faculty: u.faculty || 'Faculty of Computing & Informatics (FKI)',
+            otp: '849201'
+          };
+        }
+        const d = this.verifyDraft;
+
+        let bodyHtml = '';
+        if (step === 'pass') {
+          bodyHtml = `
+            <div class="space-y-3.5 text-left text-xs">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-emerald-600">${HUGE_ICONS.shield}</span>
+                  <h3 class="text-sm font-extrabold text-slate-900">UMS Student Verification Center</h3>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 font-bold">Close</button>
+              </div>
+
+              <!-- Mode Switcher -->
+              <div class="bg-slate-100 p-1 rounded-2xl flex font-bold text-xs">
+                <button onclick="app.openVerificationModal('pass')" class="flex-1 py-2 rounded-xl bg-white text-slate-900">Digital UMS ID</button>
+                <button onclick="app.openVerificationModal('verify_step1')" class="flex-1 py-2 rounded-xl text-slate-600">Run Verification Flow</button>
+              </div>
+
+              <!-- Digital UMS Student Card (Flat Architectural Style) -->
+              <div class="bg-slate-900 text-white rounded-3xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Universiti Malaysia Sabah</span>
+                    <h4 class="text-sm font-extrabold text-white">Student Activity Pass</h4>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-full text-xs font-extrabold ${u.isUmsVerified ? 'bg-emerald-500 text-slate-950' : 'bg-amber-500 text-slate-950'}">
+                    ${u.isUmsVerified ? 'VERIFIED' : 'UNVERIFIED'}
+                  </span>
+                </div>
+
+                <div class="flex items-center gap-3 bg-slate-800 rounded-2xl p-3">
+                  <img src="${u.avatar}" class="w-12 h-12 rounded-2xl shrink-0" alt="student" />
+                  <div class="min-w-0 flex-1">
+                    <div class="font-extrabold text-sm text-white truncate">${u.name}</div>
+                    <div class="text-emerald-300 font-bold text-xs">${u.matricNumber}</div>
+                    <div class="text-slate-400 text-xs truncate">${u.email}</div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs bg-slate-800 rounded-2xl p-3">
+                  <div>
+                    <span class="text-slate-400 block">Faculty</span>
+                    <span class="font-bold text-white">${u.faculty}</span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block">Campus</span>
+                    <span class="font-bold text-white">UMS Kota Kinabalu</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+                  <span>SSO Domain: @student.ums.edu.my</span>
+                  <span class="text-emerald-400 font-bold">Reliability: ${u.reliabilityScore}/100</span>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-1 text-slate-600">
+                <div class="font-bold text-slate-900">Why UMS Verification Matters</div>
+                <p>Ensures all sports court bookings, study pods, and last-minute replacements involve genuine UMS students for campus safety and accountability.</p>
+              </div>
+
+              <div class="flex gap-2">
+                <button onclick="app.openVerificationModal('verify_step1')" class="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl font-extrabold">
+                  Re-Verify / Test Flow
+                </button>
+                <button onclick="app.toggleUmsVerifiedState()" class="py-2.5 px-3 bg-slate-100 text-slate-700 rounded-xl font-bold">
+                  Toggle State
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (step === 'verify_step1') {
+          bodyHtml = `
+            <div class="space-y-3.5 text-left text-xs">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <div>
+                  <span class="text-indigo-600 font-bold uppercase">Step 1 of 2 • Campus Identity</span>
+                  <h3 class="text-sm font-extrabold text-slate-900">Verify UMS Student Account</h3>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 font-bold">Close</button>
+              </div>
+
+              <div class="space-y-2.5">
+                <div>
+                  <label class="font-bold text-slate-800 block mb-1">Full Name (As on UMS Matric Card) *</label>
+                  <input id="ver-name" type="text" value="${d.name}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold text-slate-900" placeholder="e.g. Farhan Azman" />
+                </div>
+
+                <div>
+                  <label class="font-bold text-slate-800 block mb-1">UMS Matric Number *</label>
+                  <input id="ver-matric" type="text" value="${d.matricNumber}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold text-slate-900 uppercase" placeholder="e.g. BI21110342" />
+                  <span class="text-slate-400 block mt-0.5">Standard UMS format (e.g. BI21110342, BK22110045, BA23110112)</span>
+                </div>
+
+                <div>
+                  <label class="font-bold text-slate-800 block mb-1">Official UMS Student Email *</label>
+                  <input id="ver-email" type="email" value="${d.email}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold text-slate-900" placeholder="name@student.ums.edu.my" />
+                  <span class="text-slate-400 block mt-0.5">Must end with @student.ums.edu.my or @ums.edu.my</span>
+                </div>
+
+                <div>
+                  <label class="font-bold text-slate-800 block mb-1">UMS Faculty *</label>
+                  <select id="ver-faculty" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold text-slate-900">
+                    <option value="Faculty of Computing & Informatics (FKI)" ${d.faculty.includes('FKI') ? 'selected' : ''}>Faculty of Computing &amp; Informatics (FKI)</option>
+                    <option value="Faculty of Engineering (FKJ)" ${d.faculty.includes('FKJ') ? 'selected' : ''}>Faculty of Engineering (FKJ)</option>
+                    <option value="Faculty of Business, Economics & Accountancy (FPEP)" ${d.faculty.includes('FPEP') ? 'selected' : ''}>Faculty of Business, Economics &amp; Accountancy (FPEP)</option>
+                    <option value="Faculty of Science & Natural Resources (FSSA)" ${d.faculty.includes('FSSA') ? 'selected' : ''}>Faculty of Science &amp; Natural Resources (FSSA)</option>
+                    <option value="Faculty of Medicine & Health Sciences (FPSK)" ${d.faculty.includes('FPSK') ? 'selected' : ''}>Faculty of Medicine &amp; Health Sciences (FPSK)</option>
+                    <option value="Faculty of Social Sciences & Humanities (FSSK)" ${d.faculty.includes('FSSK') ? 'selected' : ''}>Faculty of Social Sciences &amp; Humanities (FSSK)</option>
+                    <option value="Faculty of Food Science & Nutrition (FSMP)" ${d.faculty.includes('FSMP') ? 'selected' : ''}>Faculty of Food Science &amp; Nutrition (FSMP)</option>
+                    <option value="Faculty of Psychology & Education (FPP)" ${d.faculty.includes('FPP') ? 'selected' : ''}>Faculty of Psychology &amp; Education (FPP)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="ver-error-msg" class="hidden bg-rose-50 text-rose-700 font-bold p-2.5 rounded-xl"></div>
+
+              <div class="flex gap-2 pt-1">
+                <button onclick="app.openVerificationModal('pass')" class="py-2.5 px-3 bg-slate-100 text-slate-700 rounded-xl font-bold">Back</button>
+                <button onclick="app.submitVerificationStep1()" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-extrabold">
+                  Send 6-Digit UMS OTP Code
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (step === 'verify_step2') {
+          bodyHtml = `
+            <div class="space-y-3.5 text-left text-xs">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <div>
+                  <span class="text-emerald-600 font-bold uppercase">Step 2 of 2 • Email &amp; Matric OTP</span>
+                  <h3 class="text-sm font-extrabold text-slate-900">Enter UMS Verification Code</h3>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 font-bold">Close</button>
+              </div>
+
+              <div class="bg-slate-100 rounded-2xl p-3 space-y-1">
+                <div class="font-bold text-slate-900">Simulated OTP Dispatched</div>
+                <p class="text-slate-600">We sent a 6-digit verification code to <strong>${d.email}</strong> for Matric ID <strong>${d.matricNumber}</strong>.</p>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="font-bold text-slate-800">6-Digit Verification Code</label>
+                  <button onclick="document.getElementById('ver-otp-input').value = '849201'" class="text-indigo-600 font-bold">Auto-Fill Demo OTP (849201)</button>
+                </div>
+                <input id="ver-otp-input" type="text" maxlength="6" value="${d.otp}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-center text-base font-black tracking-widest text-slate-900" />
+              </div>
+
+              <div class="bg-emerald-50 text-emerald-900 rounded-2xl p-3 space-y-1">
+                <div class="font-bold flex items-center gap-1.5">
+                  ${HUGE_ICONS.check}
+                  <span>UMS Student Registry Match Found</span>
+                </div>
+                <p>${d.name} • ${d.matricNumber} • ${d.faculty}</p>
+              </div>
+
+              <div class="flex gap-2 pt-1">
+                <button onclick="app.openVerificationModal('verify_step1')" class="py-2.5 px-3 bg-slate-100 text-slate-700 rounded-xl font-bold">Back</button>
+                <button onclick="app.completeUmsVerification()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-extrabold">
+                  Confirm &amp; Activate UMS Badge
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        openModal(bodyHtml);
+      }
+
+      submitVerificationStep1() {
+        const name = (document.getElementById('ver-name')?.value || '').trim();
+        const matric = (document.getElementById('ver-matric')?.value || '').trim().toUpperCase();
+        const email = (document.getElementById('ver-email')?.value || '').trim().toLowerCase();
+        const faculty = document.getElementById('ver-faculty')?.value || this.user.faculty;
+        const errEl = document.getElementById('ver-error-msg');
+
+        if (!name || !matric || !email) {
+          if (errEl) {
+            errEl.textContent = 'Please complete your Name, UMS Matric Number, and UMS Student Email.';
+            errEl.classList.remove('hidden');
+          }
+          return;
+        }
+        if (!email.endsWith('@student.ums.edu.my') && !email.endsWith('@ums.edu.my')) {
+          if (errEl) {
+            errEl.textContent = 'Please use a valid Universiti Malaysia Sabah email ending in @student.ums.edu.my.';
+            errEl.classList.remove('hidden');
+          }
+          return;
+        }
+        if (matric.length < 6) {
+          if (errEl) {
+            errEl.textContent = 'Please enter a valid UMS Matric Number (e.g. BI21110342).';
+            errEl.classList.remove('hidden');
+          }
+          return;
+        }
+
+        this.verifyDraft = { name, matricNumber: matric, email, faculty, otp: '849201' };
+        this.openVerificationModal('verify_step2');
+      }
+
+      completeUmsVerification() {
+        const otpVal = (document.getElementById('ver-otp-input')?.value || '').trim();
+        if (otpVal.length < 4) {
+          this.toast('Please enter the 6-digit verification code', 'error');
+          return;
+        }
+        const d = this.verifyDraft;
+        const initials = d.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'UM';
+        this.user.name = d.name;
+        this.user.matricNumber = d.matricNumber;
+        this.user.email = d.email;
+        this.user.faculty = d.faculty;
+        this.user.avatar = createAvatarSvg('#0d9488', initials);
+        this.user.isUmsVerified = true;
+
+        closeModal();
+        if (this.currentScreen === 'onboarding') {
+          this.currentScreen = 'home';
+        }
+        this.render();
+        this.toast(`Verified UMS Student: ${d.name} (${d.matricNumber})`, 'success');
+      }
+
+      toggleUmsVerifiedState() {
+        this.user.isUmsVerified = !this.user.isUmsVerified;
+        this.render();
+        this.openVerificationModal('pass');
+        this.toast(this.user.isUmsVerified ? 'Status set to UMS Verified' : 'Status set to Unverified (Demo test)', 'info');
       }
 
       completeOnboarding() {
