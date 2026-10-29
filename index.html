@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#4f46e5">
-  <title>ActiMate - UMS Campus Activity & Replacement Matching</title>
+  <meta name="theme-color" content="#0f172a">
+  <title>ActiMate — UMS Campus Activity & Replacement Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
@@ -21,25 +21,49 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
-    .mobile-frame-container {
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    /* animate-ui inspired smooth container transitions (no hover motion scaling) */
+    @keyframes animateUiFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-ui-screen {
+      animation: animateUiFadeIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes animateUiModal {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-ui-modal {
+      animation: animateUiModal 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-800 antialiased min-h-screen flex flex-col items-center justify-start p-0 sm:py-4 sm:px-4">
+<body class="bg-slate-950 text-slate-900 antialiased min-h-screen flex flex-col items-center justify-start p-0 sm:py-4 sm:px-4">
 
-  <!-- Desktop Presentation Bar -->
-  <header class="w-full max-w-5xl mb-3 hidden sm:flex items-center justify-between bg-slate-800 border border-slate-700 rounded-2xl px-5 py-3 text-white shadow-xl">
+  <!-- Desktop Presentation Bar (Flat, No Gradients, No Shadows, No Colored Borders, No Emojis) -->
+  <header class="w-full max-w-5xl mb-3 hidden sm:flex items-center justify-between bg-slate-900 border border-slate-800 rounded-2xl px-5 py-3 text-white">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-emerald-500 flex items-center justify-center font-black text-white text-lg shadow-md">
+      <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-white text-base">
         A
       </div>
       <div>
         <div class="flex items-center gap-2">
           <span class="font-bold tracking-tight text-white text-base">ActiMate</span>
-          <span class="text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full">UMS Edition</span>
-          <span class="text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Interactive Prototype
+          <span class="text-xs font-semibold bg-slate-800 text-slate-300 px-2.5 py-0.5 rounded-full">UMS Edition</span>
+          <span class="text-xs font-semibold bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Live Prototype
           </span>
         </div>
         <p class="text-xs text-slate-400">Social Activity-Matching &amp; Last-Minute Replacement Platform • Universiti Malaysia Sabah</p>
@@ -47,34 +71,34 @@
     </div>
 
     <div class="flex items-center gap-2">
-      <button onclick="navigateTo('onboarding')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 transition">
+      <button onclick="navigateTo('onboarding')" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors">
         Welcome Screen
       </button>
-      <button onclick="toggleDeviceView()" id="btn-device-view" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 transition flex items-center gap-1.5">
-        <span id="view-mode-label">📱 Mobile View</span>
+      <button onclick="toggleDeviceView()" id="btn-device-view" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors flex items-center gap-1.5">
+        <span id="view-mode-label">Mobile View</span>
       </button>
-      <button onclick="resetMockData()" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 transition">
-        ↺ Reset Demo
+      <button onclick="resetMockData()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors">
+        Reset Demo
       </button>
-      <button onclick="openVibeFlow()" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-sm">
-        ✨ Find Your Vibe
+      <button onclick="openVibeFlow()" class="text-xs font-semibold px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-colors">
+        Find Your Vibe
       </button>
     </div>
   </header>
 
   <!-- Mobile Frame Container -->
-  <main id="app-wrapper" class="mobile-frame-container w-full max-w-[430px] bg-slate-50 min-h-screen sm:rounded-t-[40px] sm:border-x-[8px] sm:border-t-[8px] sm:border-slate-800 shadow-2xl relative flex flex-col pb-24">
+  <main id="app-wrapper" class="w-full max-w-[430px] bg-slate-50 min-h-screen sm:rounded-t-[36px] sm:border-x-[6px] sm:border-t-[6px] sm:border-slate-800 relative flex flex-col pb-24">
     
     <!-- Mobile Status Bar (Sticky at top while scrolling) -->
-    <div class="bg-white/95 backdrop-blur-md px-5 pt-3 pb-2 flex items-center justify-between text-xs text-slate-600 font-semibold shrink-0 border-b border-slate-100 sticky top-0 z-40">
+    <div class="bg-white px-5 pt-3 pb-2.5 flex items-center justify-between text-xs text-slate-600 font-semibold shrink-0 border-b border-slate-200 sticky top-0 z-40">
       <div class="flex items-center gap-2">
         <span class="font-bold text-slate-900">7:30 PM</span>
-        <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200">UMS Kota Kinabalu</span>
+        <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">UMS Kota Kinabalu</span>
       </div>
-      <div class="flex items-center gap-1.5 text-slate-700">
-        <button onclick="navigateTo('onboarding')" class="text-xs text-indigo-600 font-semibold hover:underline mr-1">Intro</button>
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span class="text-xs font-bold text-slate-700">5G</span>
+      <div class="flex items-center gap-2 text-slate-700">
+        <button onclick="navigateTo('onboarding')" class="text-xs text-indigo-600 font-semibold hover:underline">Intro</button>
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        <span class="text-xs font-bold text-slate-800">5G</span>
       </div>
     </div>
 
@@ -85,66 +109,110 @@
 
   </main>
 
-  <!-- Persistent Fixed Bottom Navigation Bar (Always stays at the bottom of the screen) -->
-  <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 backdrop-blur-md border-t border-slate-200 sm:border-x-[8px] sm:border-x-slate-800 px-2 py-2 flex items-center justify-around z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+  <!-- Persistent Fixed Bottom Navigation Bar (Flat, No Shadows, No Gradients, Hugeicons SVGs) -->
+  <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-slate-200 sm:border-x-[6px] sm:border-x-slate-800 px-3 py-2 flex items-center justify-around z-50">
     
-    <button onclick="navigateTo('home')" id="nav-btn-home" class="nav-item flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition text-indigo-600 font-bold">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    <button onclick="navigateTo('home')" id="nav-btn-home" class="nav-item flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-colors text-indigo-600 font-bold">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 10.5L12 3l9 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19.5v-9z"/>
+        <path d="M9 21V14h6v7"/>
+      </svg>
       <span class="text-xs">Home</span>
     </button>
 
-    <button onclick="navigateTo('explore')" id="nav-btn-explore" class="nav-item flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition text-slate-500 hover:text-slate-900">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    <button onclick="navigateTo('explore')" id="nav-btn-explore" class="nav-item flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-colors text-slate-500 hover:text-slate-900">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7.5"/>
+        <path d="M16.5 16.5L21 21"/>
+      </svg>
       <span class="text-xs">Explore</span>
     </button>
 
-    <button onclick="navigateTo('create')" id="nav-btn-create" class="flex flex-col items-center -mt-5 group focus:outline-none">
-      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-emerald-500 text-white flex items-center justify-center shadow-lg group-hover:scale-105 transition">
-        <svg class="w-6 h-6 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+    <button onclick="navigateTo('create')" id="nav-btn-create" class="flex flex-col items-center -mt-4 focus:outline-none">
+      <div class="w-11 h-11 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center transition-colors">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
       </div>
       <span class="text-xs font-bold text-slate-800 mt-0.5">Create</span>
     </button>
 
-    <button onclick="navigateTo('inbox')" id="nav-btn-inbox" class="nav-item flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition text-slate-500 hover:text-slate-900 relative">
+    <button onclick="navigateTo('inbox')" id="nav-btn-inbox" class="nav-item flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-colors text-slate-500 hover:text-slate-900 relative">
       <div class="relative">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-        <span id="inbox-badge" class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></span>
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.73-.34-3.9-.94L3 21l1.44-5.6A8.46 8.46 0 0 1 3.5 12 8.5 8.5 0 0 1 12 3.5 8.5 8.5 0 0 1 21 12z"/>
+          <path d="M8 12h.01M12 12h.01M16 12h.01"/>
+        </svg>
+        <span id="inbox-badge" class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full"></span>
       </div>
       <span class="text-xs">Inbox</span>
     </button>
 
-    <button onclick="navigateTo('profile')" id="nav-btn-profile" class="nav-item flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition text-slate-500 hover:text-slate-900">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+    <button onclick="navigateTo('profile')" id="nav-btn-profile" class="nav-item flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-colors text-slate-500 hover:text-slate-900">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M5 20c1.5-3.5 4.2-5 7-5s5.5 1.5 7 5"/>
+      </svg>
       <span class="text-xs">Profile</span>
     </button>
 
   </nav>
 
-  <!-- Global Toast Notification Container (Fixed to viewport top) -->
+  <!-- Global Toast Notification Container (Fixed to viewport top, Flat, No Shadows) -->
   <div id="toast-container" class="fixed top-14 left-1/2 -translate-x-1/2 w-full max-w-[400px] px-4 z-50 pointer-events-none flex flex-col gap-2"></div>
 
-  <!-- Modal Host (Fixed to viewport) -->
-  <div id="modal-container" class="fixed inset-0 z-50 bg-black/60 hidden items-end sm:items-center justify-center p-0 sm:p-4">
-    <div id="modal-content" class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl p-5">
+  <!-- Modal Host (Fixed to viewport, Flat, No Shadows) -->
+  <div id="modal-container" class="fixed inset-0 z-50 bg-slate-950/70 hidden items-end sm:items-center justify-center p-0 sm:p-4">
+    <div id="modal-content" class="animate-ui-modal bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-slate-200 max-h-[85vh] overflow-y-auto no-scrollbar p-5">
     </div>
   </div>
 
   <script>
-    // Helper to create rich CSP-safe SVG data URI banners for activities
-    function createBannerSvg(bg1, bg2, emoji, label, sublabel) {
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="280" viewBox="0 0 600 280">
-        <defs>
-          <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="${bg1}"/>
-            <stop offset="100%" stop-color="${bg2}"/>
-          </linearGradient>
-        </defs>
-        <rect width="600" height="280" fill="url(#g)"/>
-        <circle cx="520" cy="60" r="110" fill="rgba(255,255,255,0.08)"/>
-        <circle cx="80" cy="230" r="90" fill="rgba(255,255,255,0.06)"/>
-        <text x="480" y="160" font-size="95" text-anchor="middle" opacity="0.28">${emoji}</text>
-        <text x="32" y="120" font-family="sans-serif" font-size="22" font-weight="800" fill="rgba(255,255,255,0.92)">${label}</text>
-        <text x="32" y="148" font-family="sans-serif" font-size="14" font-weight="600" fill="rgba(255,255,255,0.75)">${sublabel}</text>
+    /**
+     * Hugeicons-style Geometric Rounded Stroke SVG Icon Library
+     * Zero emojis, clean 1.8px rounded vector paths
+     */
+    const HUGE_ICONS = {
+      futsal: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="12 8 15.5 10.5 14 14.5 10 14.5 8.5 10.5 12 8"/><path d="M12 3v5M19.5 7.5l-4 3M18 18.5l-4-4M6 18.5l4-4M4.5 7.5l4 3"/></svg>`,
+      badminton: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18a3 3 0 1 0 6 0H9z"/><path d="M9 18L5 6l4.5 2L12 5l2.5 3L19 6l-4 12"/></svg>`,
+      basketball: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M5.6 5.6c3.5 3.5 3.5 9.3 0 12.8M18.4 5.6c-3.5 3.5-3.5 9.3 0 12.8"/></svg>`,
+      running: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="4" r="2"/><path d="M10.5 9.5L7 12l2 4.5 4.5-2 2.5 5.5M6 19l4-3.5"/><path d="M10.5 9.5l3.5 1.5 3-2"/></svg>`,
+      study: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16z"/><path d="M4 19h16"/></svg>`,
+      hangout: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><path d="M7 3v2M11 3v2M15 3v2"/></svg>`,
+      bolt: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+      sparkles: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2L12 3z"/></svg>`,
+      shield: `<svg class="w-4 h-4 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3.5v5.5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6.5L12 3z"/><path d="M9 12l2 2 4-4"/></svg>`,
+      pin: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>`,
+      star: `<svg class="w-3 h-3 inline-block shrink-0" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+      heartOutline: `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+      heartFilled: `<svg class="w-4 h-4 text-rose-600" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+      check: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+      bell: `<svg class="w-4 h-4 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+      chat: `<svg class="w-4 h-4 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+      settings: `<svg class="w-4 h-4 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+      flag: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>`,
+      arrowLeft: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>`,
+      arrowRight: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`,
+      lock: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+      users: `<svg class="w-3.5 h-3.5 inline-block shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`
+    };
+
+    // Flat Architectural Vector Banner Generator (Zero Gradients, Zero Emojis)
+    function createFlatBannerSvg(bgHex, accentHex, label, sublabel, geometricType) {
+      let geo = `<circle cx="490" cy="140" r="85" fill="${accentHex}"/><circle cx="490" cy="140" r="45" fill="${bgHex}"/>`;
+      if (geometricType === 'court') {
+        geo = `<rect x="410" y="40" width="150" height="200" rx="16" fill="${accentHex}"/><line x1="410" y1="140" x2="560" y2="140" stroke="${bgHex}" stroke-width="6"/><circle cx="485" cy="140" r="28" fill="none" stroke="${bgHex}" stroke-width="6"/>`;
+      } else if (geometricType === 'grid') {
+        geo = `<rect x="420" y="50" width="65" height="65" rx="12" fill="${accentHex}"/><rect x="495" y="50" width="65" height="65" rx="12" fill="${accentHex}" opacity="0.6"/><rect x="420" y="125" width="65" height="65" rx="12" fill="${accentHex}" opacity="0.4"/><rect x="495" y="125" width="65" height="65" rx="12" fill="${accentHex}"/>`;
+      } else if (geometricType === 'track') {
+        geo = `<path d="M390 220 C430 80, 520 80, 560 220" fill="none" stroke="${accentHex}" stroke-width="28" stroke-linecap="round"/><circle cx="475" cy="150" r="24" fill="${accentHex}"/>`;
+      }
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260">
+        <rect width="600" height="260" fill="${bgHex}"/>
+        ${geo}
+        <rect x="32" y="42" width="44" height="6" rx="3" fill="${accentHex}"/>
+        <text x="32" y="88" font-family="sans-serif" font-size="22" font-weight="800" fill="#ffffff">${label}</text>
+        <text x="32" y="114" font-family="sans-serif" font-size="13" font-weight="600" fill="#cbd5e1">${sublabel}</text>
       </svg>`;
       return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
     }
@@ -158,12 +226,12 @@
     }
 
     const CATEGORY_BANNERS = {
-      futsal: createBannerSvg('#1e1b4b', '#4338ca', '⚽', 'UMS Futsal Arena', '5v5 Campus Match'),
-      badminton: createBannerSvg('#064e3b', '#059669', '🏸', 'Dewan Canselor Court', 'Badminton Doubles'),
-      study: createBannerSvg('#312e81', '#6366f1', '📚', 'Perpustakaan UMS', 'Study Pod & Accountability'),
-      running: createBannerSvg('#0f766e', '#10b981', '🏃', 'ODEC Beach Track', 'Sunset Campus Run & Fitness'),
-      basketball: createBannerSvg('#7c2d12', '#ea580c', '🏀', 'Kolej Tun Mustapha', '3v3 Half-Court Pickups'),
-      hangout: createBannerSvg('#4c1d95', '#7c3aed', '☕', 'Anjung Siswa Pavilion', 'Board Games & Teh Tarik')
+      futsal: createFlatBannerSvg('#1e1b4b', '#4338ca', 'UMS Futsal Arena', '5v5 Campus Match', 'court'),
+      badminton: createFlatBannerSvg('#064e3b', '#059669', 'Dewan Canselor Court', 'Badminton Doubles Session', 'court'),
+      study: createFlatBannerSvg('#1e293b', '#475569', 'Perpustakaan UMS', 'Study Pod & Accountability', 'grid'),
+      running: createFlatBannerSvg('#134e4a', '#0d9488', 'ODEC Beach Track', 'Sunset Campus Run & Fitness', 'track'),
+      basketball: createFlatBannerSvg('#431407', '#c2410c', 'Kolej Tun Mustapha', '3v3 Half-Court Pickups', 'court'),
+      hangout: createFlatBannerSvg('#2e1065', '#6d28d9', 'Anjung Siswa Pavilion', 'Board Games & Social Chill', 'grid')
     };
 
     const DEFAULT_ACTIVITIES = [
@@ -171,7 +239,7 @@
         id: 'act_1',
         title: 'Futsal Match @ Court B',
         category: 'futsal',
-        categoryLabel: '⚽ Futsal',
+        categoryLabel: 'Futsal',
         imageUrl: CATEGORY_BANNERS.futsal,
         date: 'Today',
         time: '8:00 PM',
@@ -187,7 +255,7 @@
         commitmentDeposit: 5,
         skillLevel: 'intermediate',
         skillLevelLabel: 'Casual & Intermediate',
-        description: 'Weekly 5v5 friendly match. One of our goalkeepers had a sudden tutorial clash, so we urgently need 1 more player to complete the team. Bibs and match ball provided!',
+        description: 'Weekly 5v5 friendly match. One of our goalkeepers had a sudden tutorial clash, so we urgently need 1 more player to complete the team. Bibs and match ball provided.',
         cancellationPolicy: 'Refundable deposit if cancelled at least 2 hours before kickoff so we have time to refill the spot.',
         isJoined: true,
         organiser: {
@@ -203,7 +271,7 @@
           slotIndex: 10,
           originalPlayerName: 'Danish R.',
           reason: 'Sudden evening lab presentation clash',
-          urgentNotice: 'Kickoff in 45 mins! Slot open immediately.',
+          urgentNotice: 'Kickoff in 45 mins. Slot open immediately.',
           status: 'applicants_available',
           createdAt: '30 mins ago',
           deadlineMinutes: 45,
@@ -233,7 +301,7 @@
         id: 'act_2',
         title: 'Badminton Session (Doubles)',
         category: 'badminton',
-        categoryLabel: '🏸 Badminton',
+        categoryLabel: 'Badminton',
         imageUrl: CATEGORY_BANNERS.badminton,
         date: 'Today',
         time: '6:30 PM',
@@ -249,7 +317,7 @@
         commitmentDeposit: 0,
         skillLevel: 'intermediate',
         skillLevelLabel: 'Intermediate Doubles',
-        description: 'Looking for 1 partner for friendly doubles rallies. Good sweat session, respectful play, high rallies. Bring your own racket, shuttles provided!',
+        description: 'Looking for 1 partner for friendly doubles rallies. Good sweat session, respectful play, high rallies. Bring your own racket, shuttles provided.',
         cancellationPolicy: 'Please notify at least 1 hour in advance if you cannot make it.',
         isSaved: true,
         organiser: {
@@ -265,7 +333,7 @@
           slotIndex: 4,
           originalPlayerName: 'Rachel T.',
           reason: 'Last-minute family dinner commitment',
-          urgentNotice: 'Needs 1 more player by 6:30 PM!',
+          urgentNotice: 'Needs 1 more player by 6:30 PM.',
           status: 'looking',
           createdAt: '15 mins ago',
           deadlineMinutes: 25,
@@ -281,7 +349,7 @@
         id: 'act_3',
         title: 'Study Together @ UMS Library',
         category: 'study',
-        categoryLabel: '📚 Study',
+        categoryLabel: 'Study',
         imageUrl: CATEGORY_BANNERS.study,
         date: 'Tomorrow',
         time: '2:00 PM',
@@ -293,11 +361,11 @@
         maxParticipants: 5,
         needsReplacement: false,
         estimatedContribution: 0,
-        contributionNote: 'Free! Open to all skill levels and faculties.',
+        contributionNote: 'Free. Open to all skill levels and faculties.',
         commitmentDeposit: 0,
         skillLevel: 'all',
         skillLevelLabel: 'Open to all skill levels',
-        description: 'Quiet Pomodoro study session (50 mins study / 10 mins break). Great for staying accountable instead of procrastinating in hostel rooms. We can grab iced coffee afterwards!',
+        description: 'Quiet Pomodoro study session (50 mins study / 10 mins break). Great for staying accountable instead of procrastinating in hostel rooms.',
         cancellationPolicy: 'Feel free to update RSVP if your schedule changes.',
         organiser: {
           id: 'usr_sarah',
@@ -316,7 +384,7 @@
         id: 'act_4',
         title: 'Sunset Coastal Campus Run (5KM)',
         category: 'running',
-        categoryLabel: '🏃 Running',
+        categoryLabel: 'Running',
         imageUrl: CATEGORY_BANNERS.running,
         date: 'Tomorrow',
         time: '5:15 PM',
@@ -332,7 +400,7 @@
         commitmentDeposit: 0,
         skillLevel: 'beginner',
         skillLevelLabel: 'Easy Pace (All Welcome)',
-        description: 'Brisk 5km jog around the scenic UMS coastal path. Nobody gets left behind! Perfect for destressing after lectures while watching the Kota Kinabalu sunset.',
+        description: 'Brisk 5km jog around the scenic UMS coastal path. Nobody gets left behind. Ideal for unwinding after lectures.',
         cancellationPolicy: 'Weather dependent. Free cancellation anytime.',
         organiser: {
           id: 'usr_jason',
@@ -353,7 +421,7 @@
         id: 'act_5',
         title: '3v3 Half-Court Basketball Pickups',
         category: 'basketball',
-        categoryLabel: '🏀 Basketball',
+        categoryLabel: 'Basketball',
         imageUrl: CATEGORY_BANNERS.basketball,
         date: 'Fri, 30 Oct',
         time: '5:00 PM',
@@ -385,7 +453,7 @@
           slotIndex: 6,
           originalPlayerName: 'Alex K.',
           reason: 'Stuck in traffic near 1Borneo',
-          urgentNotice: 'Need 1 player before 5:00 PM!',
+          urgentNotice: 'Need 1 player before 5:00 PM.',
           status: 'looking',
           createdAt: '10 mins ago',
           deadlineMinutes: 40,
@@ -403,7 +471,7 @@
         id: 'act_6',
         title: 'Board Games & Teh Tarik Chill Night',
         category: 'hangout',
-        categoryLabel: '☕ Hangout',
+        categoryLabel: 'Hangout',
         imageUrl: CATEGORY_BANNERS.hangout,
         date: 'Sat, 31 Oct',
         time: '8:00 PM',
@@ -420,7 +488,7 @@
         skillLevel: 'all',
         skillLevelLabel: 'Super Relaxed',
         description: 'Bringing Catan, Uno, and Exploding Kittens. Great if you had a long week of lectures and want low-pressure social time.',
-        cancellationPolicy: 'No stress! Let us know if plans change.',
+        cancellationPolicy: 'No stress. Let us know if plans change.',
         organiser: {
           id: 'usr_amir',
           name: 'Amirul Asyraf',
@@ -440,7 +508,7 @@
         id: 'act_7',
         title: 'UMS Gym Workout & Spotter Buddies',
         category: 'running',
-        categoryLabel: '🏋️ Gym & Fitness',
+        categoryLabel: 'Gym & Fitness',
         imageUrl: CATEGORY_BANNERS.running,
         date: 'Fri, 30 Oct',
         time: '4:30 PM',
@@ -475,7 +543,7 @@
         id: 'act_8',
         title: 'Weekend 7v7 Football Friendly',
         category: 'futsal',
-        categoryLabel: '⚽ Football',
+        categoryLabel: 'Football',
         imageUrl: CATEGORY_BANNERS.futsal,
         date: 'Sunday',
         time: '4:30 PM',
@@ -517,7 +585,7 @@
       avatar: createAvatarSvg('#0d9488', 'FA'),
       isUmsVerified: true,
       faculty: 'Faculty of Computing & Informatics (FKI)',
-      bio: 'Year 3 Software Engineering @ UMS. Always down for evening badminton, futsal, or group study sessions before exams!',
+      bio: 'Year 3 Software Engineering @ UMS. Always down for evening badminton, futsal, or group study sessions before exams.',
       reliabilityScore: 92,
       activitiesAttended: 18,
       attendanceRate: 94,
@@ -559,7 +627,7 @@
       {
         id: 'notif_4',
         title: 'Your replacement has been confirmed',
-        message: 'Your slot in last week’s Basketball Pickup was smoothly filled. +2 Reliability bonus!',
+        message: 'Your slot in last week’s Basketball Pickup was smoothly filled. +2 Reliability bonus.',
         timestamp: '1d ago',
         isRead: true,
         type: 'system',
@@ -580,8 +648,8 @@
       {
         id: 'conv_1',
         title: 'Futsal at UMS (Tonight 8PM)',
-        subtitle: 'Haziq: "Khairul applied to take the 10th slot!"',
-        avatar: createAvatarSvg('#4f46e5', '⚽'),
+        subtitle: 'Haziq: "Khairul applied to take the 10th slot"',
+        avatar: createAvatarSvg('#4f46e5', 'FT'),
         activityId: 'act_1',
         unreadCount: 1,
         lastMessageTime: '7:42 PM',
@@ -589,7 +657,7 @@
           {
             id: 'msg_1',
             senderName: 'Haziq Daniel (Host)',
-            text: 'Guys, Danish had to drop out due to an evening lab clash. I published a Replacement Request on ActiMate!',
+            text: 'Guys, Danish had to drop out due to an evening lab clash. I published a Replacement Request on ActiMate.',
             timestamp: '7:20 PM',
             isMe: false
           },
@@ -603,7 +671,7 @@
           {
             id: 'msg_3',
             senderName: 'Haziq Daniel (Host)',
-            text: 'Awesome! Khairul Nizam just expressed interest via Replacement Matching. Let’s confirm him!',
+            text: 'Awesome. Khairul Nizam just expressed interest via Replacement Matching. Let us confirm him.',
             timestamp: '7:42 PM',
             isMe: false
           }
@@ -612,7 +680,7 @@
       {
         id: 'conv_2',
         title: 'Nur Syafiqah (Badminton)',
-        subtitle: 'Syafiqah: "Court 3 is booked! Need 1 more."',
+        subtitle: 'Syafiqah: "Court 3 is booked. Need 1 more."',
         avatar: createAvatarSvg('#db2777', 'NS'),
         activityId: 'act_2',
         unreadCount: 0,
@@ -621,14 +689,14 @@
           {
             id: 'msg_2_1',
             senderName: 'Nur Syafiqah',
-            text: 'Hey Farhan! One of our regulars sprained her wrist, so we have 1 vacant badminton slot tonight at 6:30 PM.',
+            text: 'Hey Farhan. One of our regulars sprained her wrist, so we have 1 vacant badminton slot tonight at 6:30 PM.',
             timestamp: '5:05 PM',
             isMe: false
           },
           {
             id: 'msg_2_2',
             senderName: 'Farhan Azman',
-            text: 'Thanks for letting me know Syafiqah! Checking my schedule now.',
+            text: 'Thanks for letting me know Syafiqah. Checking my schedule now.',
             timestamp: '5:10 PM',
             isMe: true
           }
@@ -676,19 +744,13 @@
           estimatedContribution: 8,
           commitmentDeposit: 0,
           skillLevel: 'all',
-          description: 'Casual doubles session! Shuttles provided, just bring your racket and court shoes.',
+          description: 'Casual doubles session. Shuttles provided, just bring your racket and court shoes.',
           needsReplacement: true
         };
       }
 
-      persistAll() {
-        // Optional localStorage persistence
-        try {
-          localStorage.setItem('actimate_v2_state', JSON.stringify({
-            user: this.user,
-            activities: this.activities
-          }));
-        } catch (e) {}
+      getCategoryIcon(cat) {
+        return HUGE_ICONS[cat] || HUGE_ICONS.futsal;
       }
 
       resetData() {
@@ -706,16 +768,16 @@
         if (!container) return;
         const el = document.createElement('div');
         const bg = type === 'success' ? 'bg-emerald-600 text-white' : type === 'info' ? 'bg-indigo-600 text-white' : 'bg-rose-600 text-white';
-        el.className = `${bg} px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold pointer-events-auto transition-all`;
+        el.className = `animate-ui-modal ${bg} px-4 py-3 rounded-2xl flex items-center gap-2.5 text-xs font-bold pointer-events-auto`;
         el.innerHTML = `
-          <span class="w-2 h-2 rounded-full bg-white animate-ping shrink-0"></span>
+          <span class="w-2 h-2 rounded-full bg-white shrink-0"></span>
           <span class="flex-1">${message}</span>
-          <button onclick="this.parentElement.remove()" class="opacity-80 hover:opacity-100 text-white ml-2">✕</button>
+          <button onclick="this.parentElement.remove()" class="opacity-80 hover:opacity-100 text-white ml-2">Close</button>
         `;
         container.appendChild(el);
         setTimeout(() => {
           if (el && el.parentElement) el.remove();
-        }, 3500);
+        }, 3200);
       }
 
       render() {
@@ -724,40 +786,42 @@
 
         this.updateNavHighlight();
 
+        let html = '';
         switch (this.currentScreen) {
           case 'onboarding':
-            container.innerHTML = this.renderOnboarding();
+            html = this.renderOnboarding();
             break;
           case 'home':
-            container.innerHTML = this.renderHome();
+            html = this.renderHome();
             break;
           case 'explore':
-            container.innerHTML = this.renderExplore();
+            html = this.renderExplore();
             break;
           case 'create':
-            container.innerHTML = this.renderCreate();
+            html = this.renderCreate();
             break;
           case 'inbox':
-            container.innerHTML = this.renderInbox();
+            html = this.renderInbox();
             break;
           case 'profile':
-            container.innerHTML = this.renderProfile();
+            html = this.renderProfile();
             break;
           case 'details':
-            container.innerHTML = this.renderDetails();
+            html = this.renderDetails();
             break;
           case 'vibe':
-            container.innerHTML = this.renderVibe();
+            html = this.renderVibe();
             break;
           case 'subscription':
-            container.innerHTML = this.renderSubscription();
+            html = this.renderSubscription();
             break;
           case 'settings':
-            container.innerHTML = this.renderSettings();
+            html = this.renderSettings();
             break;
           default:
-            container.innerHTML = this.renderHome();
+            html = this.renderHome();
         }
+        container.innerHTML = `<div class="animate-ui-screen">${html}</div>`;
         container.scrollTop = 0;
       }
 
@@ -789,62 +853,69 @@
         }
       }
 
-      // SCREEN A: Welcome & Onboarding
+      // SCREEN A: Welcome & Onboarding (Flat solid dark slate, zero gradients, zero emojis)
       renderOnboarding() {
         return `
-          <div class="min-h-[760px] flex flex-col justify-between p-6 bg-gradient-to-b from-indigo-950 via-indigo-900 to-slate-900 text-white">
+          <div class="min-h-[760px] flex flex-col justify-between p-6 bg-slate-900 text-white">
             <div class="pt-4">
-              <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1.5 rounded-full text-xs font-semibold text-emerald-300 mb-5">
+              <div class="inline-flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full text-xs font-semibold text-emerald-400 mb-5">
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 Verified UMS Campus Community
               </div>
 
-              <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center font-black text-3xl shadow-xl mb-4">
+              <div class="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center font-black text-2xl mb-4">
                 A
               </div>
               <h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">ActiMate</h1>
-              <p class="text-lg font-bold text-emerald-400 mb-2">"Find Your People. Do More Together."</p>
+              <p class="text-lg font-bold text-emerald-400 mb-2">Find Your People. Do More Together.</p>
               <p class="text-xs text-slate-300 leading-relaxed">
                 The social activity-matching platform for Universiti Malaysia Sabah (UMS) students. Find sports partners, study groups, and urgent last-minute replacements when someone cancels.
               </p>
             </div>
 
             <div class="space-y-3 my-6">
-              <div class="bg-white/10 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-xl bg-rose-500/30 text-rose-300 flex items-center justify-center text-lg font-bold shrink-0">⚡</div>
+              <div class="bg-slate-800 p-4 rounded-2xl flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-slate-700 text-rose-400 flex items-center justify-center shrink-0">
+                  ${HUGE_ICONS.bolt}
+                </div>
                 <div>
                   <h4 class="text-xs font-bold text-white">Last-Minute Replacement Matching</h4>
-                  <p class="text-xs text-slate-300">Fill unexpected player dropouts in minutes before kickoff.</p>
+                  <p class="text-xs text-slate-400">Fill unexpected player dropouts in minutes before kickoff.</p>
                 </div>
               </div>
 
-              <div class="bg-white/10 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-lg font-bold shrink-0">✨</div>
+              <div class="bg-slate-800 p-4 rounded-2xl flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-slate-700 text-emerald-400 flex items-center justify-center shrink-0">
+                  ${HUGE_ICONS.sparkles}
+                </div>
                 <div>
-                  <h4 class="text-xs font-bold text-white">"Find Your Vibe" Mood Discovery</h4>
-                  <p class="text-xs text-slate-300">Optional activity suggestions matched to your energy &amp; mood.</p>
+                  <h4 class="text-xs font-bold text-white">Find Your Vibe Mood Discovery</h4>
+                  <p class="text-xs text-slate-400">Optional activity suggestions matched to your energy and mood.</p>
                 </div>
               </div>
 
-              <div class="bg-white/10 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-xl bg-indigo-500/30 text-indigo-300 flex items-center justify-center text-lg font-bold shrink-0">🛡️</div>
+              <div class="bg-slate-800 p-4 rounded-2xl flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-slate-700 text-indigo-400 flex items-center justify-center shrink-0">
+                  ${HUGE_ICONS.shield}
+                </div>
                 <div>
                   <h4 class="text-xs font-bold text-white">UMS Verification &amp; Reliability Score</h4>
-                  <p class="text-xs text-slate-300">Fair attendance tracking keeps games dependable &amp; safe.</p>
+                  <p class="text-xs text-slate-400">Fair attendance tracking keeps games dependable and safe.</p>
                 </div>
               </div>
             </div>
 
             <div class="space-y-2.5 pb-2">
-              <button onclick="app.completeOnboarding()" class="w-full py-3.5 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-xs shadow-lg flex items-center justify-center gap-2 transition">
-                <span>🚀 Enter Lecturer Demo Mode (Instant Access)</span>
+              <button onclick="app.completeOnboarding()" class="w-full py-3.5 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-2 transition-colors">
+                <span>Enter Lecturer Demo Mode (Instant Access)</span>
+                ${HUGE_ICONS.arrowRight}
               </button>
 
               <div class="grid grid-cols-2 gap-2">
-                <button onclick="app.showAuthModal('signin')" class="py-3 px-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs transition">
+                <button onclick="app.showAuthModal('signin')" class="py-3 px-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-colors">
                   Sign In (UMS ID)
                 </button>
-                <button onclick="app.showAuthModal('signup')" class="py-3 px-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition">
+                <button onclick="app.showAuthModal('signup')" class="py-3 px-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors">
                   Create Account
                 </button>
               </div>
@@ -863,97 +934,92 @@
             <!-- Greeting & Profile Reliability Indicator -->
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <img onclick="navigateTo('profile')" src="${this.user.avatar}" class="w-11 h-11 rounded-2xl object-cover cursor-pointer ring-2 ring-indigo-500" alt="avatar" />
+                <img onclick="navigateTo('profile')" src="${this.user.avatar}" class="w-11 h-11 rounded-2xl object-cover cursor-pointer" alt="avatar" />
                 <div>
                   <p class="text-xs text-slate-500 font-medium">Hey, ready to do something today?</p>
                   <div class="flex items-center gap-2 mt-0.5">
                     <h2 class="text-base font-extrabold text-slate-900">${this.user.name}</h2>
-                    <button onclick="app.showReliabilityModal()" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      ★ ${this.user.reliabilityScore}/100
+                    <button onclick="app.showReliabilityModal()" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 flex items-center gap-1">
+                      ${HUGE_ICONS.star}
+                      <span>${this.user.reliabilityScore}/100</span>
                     </button>
                   </div>
                 </div>
               </div>
 
-              <button onclick="navigateTo('inbox')" class="w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-700 relative shadow-sm">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500"></span>
+              <button onclick="navigateTo('inbox')" class="w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-700 relative">
+                ${HUGE_ICONS.bell}
+                <span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-rose-500"></span>
               </button>
             </div>
 
             <!-- Location & Search Bar -->
             <div class="space-y-2">
-              <div class="flex items-center justify-between bg-white border border-slate-200 rounded-2xl px-3.5 py-2 text-xs shadow-sm">
-                <div class="flex items-center gap-2">
-                  <span class="text-indigo-600 font-bold">📍 Location:</span>
-                  <span class="font-bold text-slate-800">Universiti Malaysia Sabah (UMS)</span>
+              <div class="flex items-center justify-between bg-white border border-slate-200 rounded-2xl px-3.5 py-2.5 text-xs">
+                <div class="flex items-center gap-2 text-slate-700">
+                  <span class="text-indigo-600">${HUGE_ICONS.pin}</span>
+                  <span class="font-bold text-slate-900">Universiti Malaysia Sabah (UMS)</span>
                 </div>
-                <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">Verified Campus</span>
+                <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">Verified Campus</span>
               </div>
 
-              <div onclick="navigateTo('explore')" class="cursor-pointer bg-white border border-slate-200 rounded-2xl px-4 py-3 flex items-center gap-3 text-slate-400 shadow-sm hover:border-indigo-400 transition">
-                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <span class="text-xs font-medium">What do you feel like doing? (Futsal, study, run...)</span>
+              <div onclick="navigateTo('explore')" class="cursor-pointer bg-white border border-slate-200 rounded-2xl px-4 py-3 flex items-center gap-3 text-slate-400 transition-colors">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5" stroke-width="1.8"/><path d="M16.5 16.5L21 21" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span class="text-xs font-medium">What do you feel like doing?</span>
               </div>
             </div>
 
-            <!-- Mood Check-In Card: "How are you feeling today?" -->
-            <div class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-800 rounded-3xl p-4 text-white shadow-md">
+            <!-- Mood Check-In Card: Flat Solid Indigo, No Gradients, No Emojis -->
+            <div class="bg-indigo-600 rounded-3xl p-4 text-white">
               <div class="flex items-center justify-between mb-1.5">
-                <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider">✨ Find Your Vibe</span>
-                <span class="text-xs bg-white/15 px-2 py-0.5 rounded-full text-indigo-100">Private Check-in</span>
+                <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                  ${HUGE_ICONS.sparkles}
+                  <span>Find Your Vibe</span>
+                </span>
+                <span class="text-xs bg-indigo-700 px-2.5 py-0.5 rounded-full text-indigo-100">Private Check-in</span>
               </div>
               <h3 class="text-sm font-extrabold text-white mb-1">How are you feeling today?</h3>
-              <p class="text-xs text-indigo-100 mb-3">Tap a mood to discover activities suited to your energy level.</p>
+              <p class="text-xs text-indigo-100 mb-3">Select your energy level for tailored UMS activity suggestions.</p>
 
               <div class="grid grid-cols-5 gap-1.5">
-                <button onclick="app.quickMoodSelect('energetic')" class="bg-white/15 hover:bg-white/25 rounded-2xl py-2 flex flex-col items-center gap-1 transition">
-                  <span class="text-base">⚡</span>
-                  <span class="text-xs font-semibold">Energetic</span>
-                </button>
-                <button onclick="app.quickMoodSelect('happy')" class="bg-white/15 hover:bg-white/25 rounded-2xl py-2 flex flex-col items-center gap-1 transition">
-                  <span class="text-base">😄</span>
-                  <span class="text-xs font-semibold">Happy</span>
-                </button>
-                <button onclick="app.quickMoodSelect('calm')" class="bg-white/15 hover:bg-white/25 rounded-2xl py-2 flex flex-col items-center gap-1 transition">
-                  <span class="text-base">🌿</span>
-                  <span class="text-xs font-semibold">Calm</span>
-                </button>
-                <button onclick="app.quickMoodSelect('tired')" class="bg-white/15 hover:bg-white/25 rounded-2xl py-2 flex flex-col items-center gap-1 transition">
-                  <span class="text-base">😴</span>
-                  <span class="text-xs font-semibold">Tired</span>
-                </button>
-                <button onclick="app.quickMoodSelect('stressed')" class="bg-white/15 hover:bg-white/25 rounded-2xl py-2 flex flex-col items-center gap-1 transition">
-                  <span class="text-base">🧠</span>
-                  <span class="text-xs font-semibold">Stressed</span>
-                </button>
+                ${[
+                  { id: 'energetic', label: 'Energetic' },
+                  { id: 'happy', label: 'Happy' },
+                  { id: 'calm', label: 'Calm' },
+                  { id: 'tired', label: 'Tired' },
+                  { id: 'stressed', label: 'Stressed' }
+                ].map(m => `
+                  <button onclick="app.quickMoodSelect('${m.id}')" class="bg-indigo-700 hover:bg-indigo-800 rounded-xl py-2.5 px-1 flex flex-col items-center justify-center transition-colors">
+                    <span class="text-xs font-bold text-white">${m.label}</span>
+                  </button>
+                `).join('')}
               </div>
             </div>
 
             <!-- Activity Categories Chips -->
             <div>
               <div class="flex items-center justify-between mb-2">
-                <h3 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider">Activity Categories</h3>
-                <button onclick="navigateTo('explore')" class="text-xs font-bold text-indigo-600">Explore All →</button>
+                <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Categories</h3>
+                <button onclick="navigateTo('explore')" class="text-xs font-bold text-indigo-600">Explore All</button>
               </div>
               <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-                <button onclick="app.filterByCategory('all')" class="shrink-0 px-3 py-1.5 rounded-xl bg-indigo-600 text-white font-bold text-xs">All</button>
-                <button onclick="app.filterByCategory('futsal')" class="shrink-0 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs">⚽ Futsal &amp; Football</button>
-                <button onclick="app.filterByCategory('badminton')" class="shrink-0 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs">🏸 Badminton</button>
-                <button onclick="app.filterByCategory('basketball')" class="shrink-0 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs">🏀 Basketball</button>
-                <button onclick="app.filterByCategory('running')" class="shrink-0 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs">🏃 Run &amp; Gym</button>
-                <button onclick="app.filterByCategory('study')" class="shrink-0 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs">📚 Study</button>
-                <button onclick="app.filterByCategory('hangout')" class="shrink-0 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs">☕ Hangouts</button>
+                <button onclick="app.filterByCategory('all')" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 text-white font-bold text-xs">All</button>
+                <button onclick="app.filterByCategory('futsal')" class="shrink-0 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5">${HUGE_ICONS.futsal} <span>Futsal &amp; Football</span></button>
+                <button onclick="app.filterByCategory('badminton')" class="shrink-0 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5">${HUGE_ICONS.badminton} <span>Badminton</span></button>
+                <button onclick="app.filterByCategory('basketball')" class="shrink-0 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5">${HUGE_ICONS.basketball} <span>Basketball</span></button>
+                <button onclick="app.filterByCategory('running')" class="shrink-0 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5">${HUGE_ICONS.running} <span>Run &amp; Gym</span></button>
+                <button onclick="app.filterByCategory('study')" class="shrink-0 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5">${HUGE_ICONS.study} <span>Study</span></button>
+                <button onclick="app.filterByCategory('hangout')" class="shrink-0 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5">${HUGE_ICONS.hangout} <span>Hangouts</span></button>
               </div>
             </div>
 
-            <!-- SECTION: Needs 1 More Player (Last-Minute Replacement Matching) -->
+            <!-- SECTION: Needs 1 More Player -->
             <div>
               <div class="flex items-center justify-between mb-2.5">
                 <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+                  <span class="w-2 h-2 rounded-full bg-rose-600"></span>
                   <h3 class="text-sm font-extrabold text-slate-900">Needs 1 More Player</h3>
-                  <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">Urgent Slots</span>
+                  <span class="bg-rose-50 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">Urgent</span>
                 </div>
                 <button onclick="app.filterReplacementsOnly()" class="text-xs font-bold text-indigo-600">See All (${urgentReplacements.length})</button>
               </div>
@@ -966,7 +1032,7 @@
             <div>
               <div class="flex items-center justify-between mb-2.5">
                 <h3 class="text-sm font-extrabold text-slate-900">Happening Near You @ UMS</h3>
-                <button onclick="navigateTo('explore')" class="text-xs font-bold text-indigo-600">View Map / All</button>
+                <button onclick="navigateTo('explore')" class="text-xs font-bold text-indigo-600">View All</button>
               </div>
               <div class="space-y-3">
                 ${regularActivities.slice(0, 3).map(act => this.renderActivityCard(act, false)).join('')}
@@ -977,7 +1043,7 @@
             <div>
               <div class="flex items-center justify-between mb-2.5">
                 <h3 class="text-sm font-extrabold text-slate-900">Recommended for You</h3>
-                <button onclick="openVibeFlow()" class="text-xs font-bold text-emerald-600">✨ Customize Vibe</button>
+                <button onclick="openVibeFlow()" class="text-xs font-bold text-emerald-700">Customize Vibe</button>
               </div>
               <div class="space-y-3">
                 ${regularActivities.slice(3).map(act => this.renderActivityCard(act, false)).join('')}
@@ -987,66 +1053,76 @@
         `;
       }
 
+      // Reusable Activity Card (Flat, Zero Shadows, Zero Colored Borders, Zero Emojis, Zero Hover Scale)
       renderActivityCard(act, isUrgent = false) {
         const remainingSlots = act.maxParticipants - act.currentParticipants;
         const isSaved = this.user.savedActivityIds.includes(act.id);
         const isJoined = act.isJoined || this.user.joinedActivityIds.includes(act.id);
 
         return `
-          <div onclick="app.openActivityDetails('${act.id}')" class="bg-white border ${isUrgent ? 'border-rose-200' : 'border-slate-200'} rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer">
-            <div class="h-32 w-full relative bg-slate-800">
+          <div onclick="app.openActivityDetails('${act.id}')" class="bg-white border border-slate-200 rounded-3xl overflow-hidden cursor-pointer">
+            <div class="h-32 w-full relative bg-slate-900">
               <img src="${act.imageUrl}" class="w-full h-full object-cover" alt="${act.title}" />
-              <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-                <span class="bg-white/95 text-slate-900 text-xs font-bold px-2.5 py-0.5 rounded-full shadow-sm">
-                  ${act.categoryLabel}
+              <div class="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
+                <span class="bg-white text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                  ${this.getCategoryIcon(act.category)}
+                  <span>${act.categoryLabel}</span>
                 </span>
                 ${act.needsReplacement ? `
-                  <span class="bg-rose-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-full shadow-sm">
-                    ⚡ Needs ${remainingSlots} more player
+                  <span class="bg-rose-600 text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                    ${HUGE_ICONS.bolt}
+                    <span>Needs ${remainingSlots} more player</span>
                   </span>
                 ` : ''}
               </div>
 
-              <button onclick="event.stopPropagation(); app.toggleSaveActivity('${act.id}')" class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center text-slate-700 shadow-sm">
-                <span>${isSaved ? '❤️' : '🤍'}</span>
+              <button onclick="event.stopPropagation(); app.toggleSaveActivity('${act.id}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-700">
+                ${isSaved ? HUGE_ICONS.heartFilled : HUGE_ICONS.heartOutline}
               </button>
 
-              <div class="absolute bottom-2 left-3 right-3 flex items-center justify-between text-white text-xs">
-                <span class="font-bold bg-black/50 px-2 py-0.5 rounded-md">${act.date}, ${act.time}</span>
-                <span class="font-bold bg-black/60 px-2 py-0.5 rounded-md">${act.currentParticipants}/${act.maxParticipants} participants</span>
+              <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white text-xs">
+                <span class="font-bold bg-slate-900/80 px-2.5 py-0.5 rounded-md">${act.date}, ${act.time}</span>
+                <span class="font-bold bg-slate-900/80 px-2.5 py-0.5 rounded-md">${act.currentParticipants}/${act.maxParticipants} participants</span>
               </div>
             </div>
 
-            <div class="p-3.5 space-y-2.5">
+            <div class="p-4 space-y-3">
               <div>
                 <h4 class="font-extrabold text-slate-900 text-sm">${act.title}</h4>
-                <p class="text-xs text-slate-500 mt-0.5">📍 ${act.venue} • ${act.skillLevelLabel}</p>
+                <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+                  ${HUGE_ICONS.pin}
+                  <span>${act.venue} • ${act.skillLevelLabel}</span>
+                </p>
               </div>
 
-              <div class="flex items-center justify-between border-t border-slate-100 pt-2 text-xs">
+              <div class="flex items-center justify-between border-t border-slate-100 pt-2.5 text-xs">
                 <div class="flex items-center gap-2">
                   <img src="${act.organiser.avatar}" class="w-6 h-6 rounded-full" alt="host" />
                   <span class="font-semibold text-slate-700">${act.organiser.name}</span>
-                  <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">★ ${act.organiser.reliabilityScore}</span>
+                  <span class="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center gap-1">
+                    ${HUGE_ICONS.star}
+                    <span>${act.organiser.reliabilityScore}</span>
+                  </span>
                 </div>
-                <div class="font-extrabold text-indigo-700">
+                <div class="font-extrabold text-indigo-600">
                   ${act.estimatedContribution === 0 ? 'Free' : 'RM' + act.estimatedContribution + ' est.'}
                 </div>
               </div>
 
-              <div class="pt-1 flex items-center gap-2">
+              <div class="pt-0.5 flex items-center gap-2">
                 ${isJoined ? `
-                  <button onclick="event.stopPropagation(); app.openActivityDetails('${act.id}')" class="flex-1 py-2 px-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold text-xs">
-                    ✓ Joined Session (View Details)
+                  <button onclick="event.stopPropagation(); app.openActivityDetails('${act.id}')" class="flex-1 py-2.5 px-3 rounded-xl bg-emerald-50 text-emerald-800 font-bold text-xs flex items-center justify-center gap-1.5">
+                    ${HUGE_ICONS.check}
+                    <span>Joined Session</span>
                   </button>
                   ${act.needsReplacement ? `
-                    <button onclick="event.stopPropagation(); app.openReplacementHub('${act.id}')" class="py-2 px-3 rounded-xl bg-rose-600 text-white font-bold text-xs">
+                    <button onclick="event.stopPropagation(); app.openReplacementHub('${act.id}')" class="py-2.5 px-3 rounded-xl bg-rose-600 text-white font-bold text-xs">
                       Manage Replacement (${act.replacementDetails?.applicants?.length || 0})
                     </button>
                   ` : ''}
                 ` : `
-                  <button onclick="event.stopPropagation(); app.initiateJoin('${act.id}')" class="w-full py-2.5 px-3 rounded-xl ${isUrgent ? 'bg-rose-600 hover:bg-rose-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white font-bold text-xs shadow-sm transition">
-                    ${isUrgent ? '⚡ Join as Replacement (' + remainingSlots + ' slot left)' : 'Join Activity'}
+                  <button onclick="event.stopPropagation(); app.initiateJoin('${act.id}')" class="w-full py-2.5 px-3 rounded-xl ${isUrgent ? 'bg-rose-600 hover:bg-rose-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white font-bold text-xs transition-colors">
+                    ${isUrgent ? 'Join as Replacement (' + remainingSlots + ' slot left)' : 'Join Activity'}
                   </button>
                 `}
               </div>
@@ -1088,21 +1164,22 @@
                 value="${this.exploreFilters.searchQuery}"
                 oninput="app.handleSearchInput(this.value)"
                 placeholder="Search futsal, badminton, library, ODEC..." 
-                class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-indigo-500 shadow-sm"
+                class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-2.5 text-xs text-slate-800 focus:outline-none"
               />
             </div>
 
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-              <button onclick="app.toggleReplacementFilter()" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold ${this.exploreFilters.onlyReplacements ? 'bg-rose-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">
-                ⚡ Vacant Replacement Slots
+              <button onclick="app.toggleReplacementFilter()" class="shrink-0 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 ${this.exploreFilters.onlyReplacements ? 'bg-rose-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">
+                ${HUGE_ICONS.bolt}
+                <span>Vacant Replacement Slots</span>
               </button>
-              <button onclick="app.setExploreCategory('all')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'all' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">All</button>
-              <button onclick="app.setExploreCategory('futsal')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'futsal' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">⚽ Futsal</button>
-              <button onclick="app.setExploreCategory('badminton')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'badminton' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">🏸 Badminton</button>
-              <button onclick="app.setExploreCategory('basketball')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'basketball' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">🏀 Basketball</button>
-              <button onclick="app.setExploreCategory('running')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'running' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">🏃 Run/Gym</button>
-              <button onclick="app.setExploreCategory('study')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'study' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">📚 Study</button>
-              <button onclick="app.setExploreCategory('hangout')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'hangout' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">☕ Hangout</button>
+              <button onclick="app.setExploreCategory('all')" class="shrink-0 px-3 py-2 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'all' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">All</button>
+              <button onclick="app.setExploreCategory('futsal')" class="shrink-0 px-3 py-2 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'futsal' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">Futsal</button>
+              <button onclick="app.setExploreCategory('badminton')" class="shrink-0 px-3 py-2 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'badminton' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">Badminton</button>
+              <button onclick="app.setExploreCategory('basketball')" class="shrink-0 px-3 py-2 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'basketball' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">Basketball</button>
+              <button onclick="app.setExploreCategory('running')" class="shrink-0 px-3 py-2 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'running' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">Run &amp; Gym</button>
+              <button onclick="app.setExploreCategory('study')" class="shrink-0 px-3 py-2 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'study' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">Study</button>
+              <button onclick="app.setExploreCategory('hangout')" class="shrink-0 px-3 py-2 rounded-xl text-xs font-bold ${this.exploreFilters.category === 'hangout' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}">Hangout</button>
             </div>
 
             <div class="flex items-center justify-between bg-white border border-slate-200 rounded-2xl p-2.5 text-xs">
@@ -1129,9 +1206,8 @@
                 filtered.map(act => this.renderActivityCard(act, act.needsReplacement)).join('')
               ) : `
                 <div class="bg-white border border-slate-200 rounded-3xl p-8 text-center space-y-3">
-                  <div class="text-3xl">🔍</div>
                   <h3 class="font-bold text-slate-800 text-sm">No matching activities found</h3>
-                  <p class="text-xs text-slate-500">Try resetting your filters or create a new activity for UMS students!</p>
+                  <p class="text-xs text-slate-500">Try resetting your filters or create a new activity for UMS students.</p>
                   <button onclick="app.resetFilters()" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">Reset Filters</button>
                 </div>
               `}
@@ -1151,49 +1227,55 @@
             <div class="h-48 w-full relative bg-slate-900">
               <img src="${act.imageUrl}" class="w-full h-full object-cover" alt="${act.title}" />
               <div class="absolute top-3 left-3 right-3 flex items-center justify-between">
-                <button onclick="navigateTo('home')" class="px-3 py-1.5 rounded-full bg-white/90 text-slate-800 font-bold text-xs shadow">
-                  ← Back
+                <button onclick="navigateTo('home')" class="px-3 py-1.5 rounded-full bg-white text-slate-800 font-bold text-xs flex items-center gap-1.5">
+                  ${HUGE_ICONS.arrowLeft}
+                  <span>Back</span>
                 </button>
                 <div class="flex items-center gap-2">
-                  <button onclick="app.toggleSaveActivity('${act.id}')" class="px-3 py-1.5 rounded-full bg-white/90 text-slate-800 font-bold text-xs shadow">
-                    ${isSaved ? '❤️ Saved' : '🤍 Save'}
+                  <button onclick="app.toggleSaveActivity('${act.id}')" class="px-3 py-1.5 rounded-full bg-white text-slate-800 font-bold text-xs flex items-center gap-1.5">
+                    ${isSaved ? HUGE_ICONS.heartFilled : HUGE_ICONS.heartOutline}
+                    <span>${isSaved ? 'Saved' : 'Save'}</span>
                   </button>
-                  <button onclick="app.showReportModal('${act.id}')" class="px-3 py-1.5 rounded-full bg-white/90 text-rose-700 font-bold text-xs shadow">
-                    ⚑ Report
+                  <button onclick="app.showReportModal('${act.id}')" class="px-3 py-1.5 rounded-full bg-white text-rose-700 font-bold text-xs flex items-center gap-1">
+                    ${HUGE_ICONS.flag}
+                    <span>Report</span>
                   </button>
                 </div>
               </div>
               <div class="absolute bottom-3 left-4 right-4 text-white">
                 <div class="flex items-center gap-2 mb-1">
                   <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">${act.categoryLabel}</span>
-                  ${act.needsReplacement ? `<span class="bg-rose-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">⚡ Replacement Needed</span>` : ''}
+                  ${act.needsReplacement ? `<span class="bg-rose-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">Replacement Needed</span>` : ''}
                 </div>
                 <h1 class="text-lg font-extrabold text-white">${act.title}</h1>
               </div>
             </div>
 
             <div class="px-4 space-y-3.5">
-              <!-- Last-Minute Replacement Banner -->
+              <!-- Last-Minute Replacement Banner (Flat, no colored border) -->
               ${act.needsReplacement ? `
-                <div class="bg-rose-50 border border-rose-200 rounded-3xl p-4 space-y-2">
+                <div class="bg-rose-50 rounded-3xl p-4 space-y-2">
                   <div class="flex items-center justify-between">
-                    <span class="text-xs font-extrabold text-rose-900">⚡ Urgent Replacement Slot Open</span>
+                    <span class="text-xs font-extrabold text-rose-900 flex items-center gap-1.5">
+                      ${HUGE_ICONS.bolt}
+                      <span>Urgent Replacement Slot Open</span>
+                    </span>
                     <span class="text-xs font-bold bg-rose-200 text-rose-900 px-2 py-0.5 rounded-full">${act.replacementDetails?.deadlineMinutes || 30}m left</span>
                   </div>
                   <p class="text-xs text-rose-800">
                     <strong>Reason:</strong> ${act.replacementDetails?.reason || 'Last-minute participant cancellation'}.
                   </p>
                   <div class="flex items-center gap-2 pt-1">
-                    <button onclick="app.openReplacementHub('${act.id}')" class="flex-1 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold">
-                      Open Replacement Matching Hub (${act.replacementDetails?.applicants?.length || 0} applicants) →
+                    <button onclick="app.openReplacementHub('${act.id}')" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition-colors">
+                      Open Replacement Matching Hub (${act.replacementDetails?.applicants?.length || 0} applicants)
                     </button>
                   </div>
                 </div>
               ` : `
-                <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3 flex items-center justify-between text-xs">
-                  <span class="font-semibold text-indigo-900">Someone cancelled last minute?</span>
+                <div class="bg-slate-100 rounded-2xl p-3 flex items-center justify-between text-xs">
+                  <span class="font-semibold text-slate-800">Someone cancelled last minute?</span>
                   <button onclick="app.publishNewReplacementRequest('${act.id}')" class="font-bold text-white bg-indigo-600 px-3 py-1.5 rounded-xl">
-                    + Find a Replacement
+                    Find a Replacement
                   </button>
                 </div>
               `}
@@ -1208,8 +1290,9 @@
                   </div>
                 </div>
                 <div class="text-right">
-                  <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-200 block">
-                    ★ ${act.organiser.reliabilityScore}/100
+                  <span class="text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg flex items-center gap-1">
+                    ${HUGE_ICONS.star}
+                    <span>${act.organiser.reliabilityScore}/100</span>
                   </span>
                 </div>
               </div>
@@ -1230,9 +1313,9 @@
                 </div>
                 <div class="flex justify-between py-1">
                   <span class="text-slate-500">Estimated Contribution:</span>
-                  <span class="font-extrabold text-indigo-700">${act.estimatedContribution === 0 ? 'Free (RM0)' : 'RM' + act.estimatedContribution + ' / pax'}</span>
+                  <span class="font-extrabold text-indigo-600">${act.estimatedContribution === 0 ? 'Free (RM0)' : 'RM' + act.estimatedContribution + ' / pax'}</span>
                 </div>
-                <p class="text-xs text-slate-500 bg-slate-50 p-2 rounded-xl">${act.contributionNote}</p>
+                <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl">${act.contributionNote}</p>
               </div>
 
               <!-- Description & Cancellation -->
@@ -1263,14 +1346,16 @@
               <!-- Primary Action Bar -->
               <div class="pt-1 pb-4 flex items-center gap-2">
                 ${isJoined ? `
-                  <button onclick="app.openChatForActivity('${act.id}')" class="flex-1 py-3 bg-indigo-600 text-white font-bold text-xs rounded-2xl shadow">
-                    💬 Open Group Chat
+                  <button onclick="app.openChatForActivity('${act.id}')" class="flex-1 py-3 bg-indigo-600 text-white font-bold text-xs rounded-2xl flex items-center justify-center gap-1.5">
+                    ${HUGE_ICONS.chat}
+                    <span>Open Group Chat</span>
                   </button>
-                  <button onclick="app.openReplacementHub('${act.id}')" class="flex-1 py-3 bg-rose-600 text-white font-bold text-xs rounded-2xl shadow">
-                    ⚡ Replacement Hub
+                  <button onclick="app.openReplacementHub('${act.id}')" class="flex-1 py-3 bg-rose-600 text-white font-bold text-xs rounded-2xl flex items-center justify-center gap-1.5">
+                    ${HUGE_ICONS.bolt}
+                    <span>Replacement Hub</span>
                   </button>
                 ` : `
-                  <button onclick="app.initiateJoin('${act.id}')" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-2xl shadow-lg">
+                  <button onclick="app.initiateJoin('${act.id}')" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-2xl transition-colors">
                     Join Activity (${act.estimatedContribution === 0 ? 'Free' : 'RM' + act.estimatedContribution})
                   </button>
                 `}
@@ -1290,7 +1375,7 @@
             slotIndex: act.maxParticipants,
             originalPlayerName: 'Last-Minute Dropout',
             reason: 'Unexpected academic tutorial clash',
-            urgentNotice: 'Starts soon! 1 vacant slot open.',
+            urgentNotice: 'Starts soon. 1 vacant slot open.',
             status: 'looking',
             createdAt: 'Just now',
             deadlineMinutes: 35,
@@ -1303,10 +1388,10 @@
           <div class="space-y-4 text-left">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <span class="text-xs font-bold text-rose-600 uppercase">⚡ Last-Minute Replacement Matching</span>
+                <span class="text-xs font-bold text-rose-600 uppercase">Last-Minute Replacement Matching</span>
                 <h3 class="text-base font-extrabold text-slate-900">${act.title}</h3>
               </div>
-              <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 font-bold">✕</button>
+              <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 font-bold text-xs">Close</button>
             </div>
 
             <!-- Status Progression Bar -->
@@ -1320,10 +1405,10 @@
               </div>
             </div>
 
-            <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3 text-xs text-rose-900 space-y-1">
+            <div class="bg-rose-50 rounded-2xl p-3 text-xs text-rose-900 space-y-1">
               <div><strong>Venue:</strong> ${act.venue} (${act.time})</div>
               <div><strong>Reason:</strong> ${rep.reason}</div>
-              <div><strong>Contribution:</strong> RM${act.estimatedContribution} • Host Reliability: ★${act.organiser.reliabilityScore}</div>
+              <div><strong>Contribution:</strong> RM${act.estimatedContribution} • Host Reliability: ${act.organiser.reliabilityScore}/100</div>
             </div>
 
             <!-- Applicants List -->
@@ -1341,11 +1426,11 @@
                     <img src="${appUser.avatar}" class="w-9 h-9 rounded-full" alt="u" />
                     <div>
                       <h5 class="text-xs font-bold text-slate-900">${appUser.name}</h5>
-                      <p class="text-xs text-emerald-700 font-semibold">★ ${appUser.reliabilityScore}/100 Reliability</p>
+                      <p class="text-xs text-emerald-700 font-semibold">${appUser.reliabilityScore}/100 Reliability</p>
                     </div>
                   </div>
                   ${rep.status === 'confirmed' ? `
-                    <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl">✓ Confirmed</span>
+                    <span class="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-xl">Confirmed</span>
                   ` : `
                     <button onclick="app.confirmReplacementApplicant('${act.id}', '${appUser.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl">
                       Confirm Replacement
@@ -1354,7 +1439,7 @@
                 </div>
               `).join('') : `
                 <div class="p-4 bg-slate-50 rounded-2xl text-center text-xs text-slate-500">
-                  Waiting for nearby UMS students... Click <strong>"+ Simulate New Applicant"</strong> above to test!
+                  Waiting for nearby UMS students. Click <strong>"+ Simulate New Applicant"</strong> above to test.
                 </div>
               `}
             </div>
@@ -1375,7 +1460,7 @@
           slotIndex: act.maxParticipants,
           originalPlayerName: 'Withdrawn Participant',
           reason: 'Last-minute cancellation — urgent replacement needed',
-          urgentNotice: '1 vacant slot open now!',
+          urgentNotice: '1 vacant slot open now.',
           status: 'looking',
           createdAt: 'Just now',
           deadlineMinutes: 40,
@@ -1383,7 +1468,7 @@
         };
         this.render();
         this.openReplacementHub(activityId);
-        this.toast('⚡ Replacement request published to nearby UMS students!', 'info');
+        this.toast('Replacement request published to nearby UMS students', 'info');
       }
 
       simulateNewApplicant(activityId) {
@@ -1399,7 +1484,7 @@
         act.replacementDetails.applicants.push(newCand);
         act.replacementDetails.status = 'applicants_available';
         this.openReplacementHub(activityId);
-        this.toast('New student expressed interest in filling the slot!', 'info');
+        this.toast('New student expressed interest in filling the slot', 'info');
       }
 
       confirmReplacementApplicant(activityId, applicantId) {
@@ -1415,7 +1500,7 @@
 
         this.notifications.unshift({
           id: 'notif_' + Date.now(),
-          title: 'Your replacement has been confirmed!',
+          title: 'Your replacement has been confirmed',
           message: `${applicant.name} is confirmed for ${act.title}. Squad is now full (${act.currentParticipants}/${act.maxParticipants}).`,
           timestamp: 'Just now',
           isRead: false,
@@ -1425,7 +1510,7 @@
 
         closeModal();
         this.render();
-        this.toast(`✅ Replacement confirmed! ${applicant.name} joined ${act.title}.`, 'success');
+        this.toast(`Replacement confirmed: ${applicant.name} joined ${act.title}`, 'success');
       }
 
       // SCREEN F: Create Activity
@@ -1438,7 +1523,7 @@
               <p class="text-xs text-slate-500">Organise a game, workout, or study session at UMS</p>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-3xl p-4 space-y-3 text-xs shadow-sm">
+            <div class="bg-white border border-slate-200 rounded-3xl p-4 space-y-3 text-xs">
               <div>
                 <label class="font-bold text-slate-800 block mb-1">Activity Name *</label>
                 <input type="text" value="${d.title}" oninput="app.updateCreateDraft('title', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold" />
@@ -1448,12 +1533,12 @@
                 <div>
                   <label class="font-bold text-slate-800 block mb-1">Category</label>
                   <select onchange="app.updateCreateDraft('category', this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-semibold">
-                    <option value="futsal" ${d.category === 'futsal' ? 'selected' : ''}>⚽ Futsal / Football</option>
-                    <option value="badminton" ${d.category === 'badminton' ? 'selected' : ''}>🏸 Badminton</option>
-                    <option value="basketball" ${d.category === 'basketball' ? 'selected' : ''}>🏀 Basketball</option>
-                    <option value="running" ${d.category === 'running' ? 'selected' : ''}>🏃 Running / Gym</option>
-                    <option value="study" ${d.category === 'study' ? 'selected' : ''}>📚 Study Together</option>
-                    <option value="hangout" ${d.category === 'hangout' ? 'selected' : ''}>☕ Casual Hangout</option>
+                    <option value="futsal" ${d.category === 'futsal' ? 'selected' : ''}>Futsal / Football</option>
+                    <option value="badminton" ${d.category === 'badminton' ? 'selected' : ''}>Badminton</option>
+                    <option value="basketball" ${d.category === 'basketball' ? 'selected' : ''}>Basketball</option>
+                    <option value="running" ${d.category === 'running' ? 'selected' : ''}>Running / Gym</option>
+                    <option value="study" ${d.category === 'study' ? 'selected' : ''}>Study Together</option>
+                    <option value="hangout" ${d.category === 'hangout' ? 'selected' : ''}>Casual Hangout</option>
                   </select>
                 </div>
                 <div>
@@ -1512,8 +1597,8 @@
               </div>
             </div>
 
-            <button onclick="app.submitNewActivity()" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-lg">
-              🚀 Publish Activity to UMS Feed
+            <button onclick="app.submitNewActivity()" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs transition-colors">
+              Publish Activity to UMS Feed
             </button>
           </div>
         `;
@@ -1595,7 +1680,7 @@
         this.user.joinedActivityIds.push(newAct.id);
         this.selectedActivityId = newAct.id;
         navigateTo('details');
-        this.toast('🎉 Activity created and added to UMS Home & Explore feeds!', 'success');
+        this.toast('Activity created and added to UMS Home & Explore feeds', 'success');
       }
 
       // SCREEN G: Mood-Based Recommendations ("Find Your Vibe")
@@ -1606,14 +1691,23 @@
         return `
           <div class="p-4 space-y-4">
             <div class="flex items-center justify-between">
-              <button onclick="navigateTo('home')" class="text-xs font-bold text-slate-500">← Skip / Back Home</button>
-              <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">🔒 Private by Default</span>
+              <button onclick="navigateTo('home')" class="text-xs font-bold text-slate-500 flex items-center gap-1">
+                ${HUGE_ICONS.arrowLeft}
+                <span>Skip / Back Home</span>
+              </button>
+              <span class="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                ${HUGE_ICONS.lock}
+                <span>Private by Default</span>
+              </span>
             </div>
 
-            <div class="bg-gradient-to-r from-indigo-800 to-emerald-700 rounded-3xl p-4 text-white space-y-1">
-              <span class="text-xs font-bold text-emerald-300 uppercase">✨ Find Your Vibe</span>
+            <div class="bg-slate-900 rounded-3xl p-4 text-white space-y-1">
+              <span class="text-xs font-bold text-emerald-400 uppercase flex items-center gap-1.5">
+                ${HUGE_ICONS.sparkles}
+                <span>Find Your Vibe</span>
+              </span>
               <h2 class="text-lg font-extrabold">Mood-Based Activity Discovery</h2>
-              <p class="text-xs text-indigo-100">Select your current mood and preferred interaction style below.</p>
+              <p class="text-xs text-slate-300">Select your current mood and preferred interaction style below.</p>
             </div>
 
             <!-- Step 1: Mood -->
@@ -1621,14 +1715,13 @@
               <h4 class="font-extrabold text-slate-900">Step 1: How are you feeling today?</h4>
               <div class="grid grid-cols-5 gap-1.5">
                 ${[
-                  { id: 'energetic', icon: '⚡', label: 'Energetic' },
-                  { id: 'happy', icon: '😄', label: 'Happy' },
-                  { id: 'calm', icon: '🌿', label: 'Calm' },
-                  { id: 'tired', icon: '😴', label: 'Tired' },
-                  { id: 'stressed', icon: '🧠', label: 'Stressed' }
+                  { id: 'energetic', label: 'Energetic' },
+                  { id: 'happy', label: 'Happy' },
+                  { id: 'calm', label: 'Calm' },
+                  { id: 'tired', label: 'Tired' },
+                  { id: 'stressed', label: 'Stressed' }
                 ].map(m => `
-                  <button onclick="app.setVibeMood('${m.id}')" class="p-2 rounded-2xl border flex flex-col items-center gap-1 transition ${s.mood === m.id ? 'bg-indigo-600 text-white border-indigo-600 font-bold' : 'bg-slate-50 border-slate-200 text-slate-700'}">
-                    <span class="text-base">${m.icon}</span>
+                  <button onclick="app.setVibeMood('${m.id}')" class="py-2.5 px-1 rounded-xl border flex flex-col items-center justify-center transition-colors ${s.mood === m.id ? 'bg-indigo-600 text-white border-slate-900 font-bold' : 'bg-slate-50 border-slate-200 text-slate-700'}">
                     <span class="text-xs">${m.label}</span>
                   </button>
                 `).join('')}
@@ -1640,13 +1733,13 @@
               <h4 class="font-extrabold text-slate-900">Step 2: What kind of interaction would you prefer?</h4>
               <div class="grid grid-cols-2 gap-2">
                 ${[
-                  { id: 'active_group', label: '🏆 Active group' },
-                  { id: 'small_casual', label: '👥 Small, casual group' },
-                  { id: 'quiet_low_pressure', label: '🎧 Quiet & low-pressure' },
-                  { id: 'study_others', label: '📚 Study with others' },
-                  { id: 'no_preference', label: '🎲 No preference' }
+                  { id: 'active_group', label: 'Active group' },
+                  { id: 'small_casual', label: 'Small, casual group' },
+                  { id: 'quiet_low_pressure', label: 'Quiet & low-pressure' },
+                  { id: 'study_others', label: 'Study with others' },
+                  { id: 'no_preference', label: 'No preference' }
                 ].map(i => `
-                  <button onclick="app.setVibeInteraction('${i.id}')" class="p-2.5 rounded-xl border text-left font-semibold transition ${s.interaction === i.id ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-slate-50 border-slate-200 text-slate-700'}">
+                  <button onclick="app.setVibeInteraction('${i.id}')" class="p-2.5 rounded-xl border text-left font-semibold transition-colors ${s.interaction === i.id ? 'bg-emerald-600 text-white border-slate-900' : 'bg-slate-50 border-slate-200 text-slate-700'}">
                     ${i.label}
                   </button>
                 `).join('')}
@@ -1654,10 +1747,10 @@
             </div>
 
             <!-- Step 3: Explanation & Recommendations -->
-            <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 text-xs text-indigo-950 space-y-1">
-              <div class="font-extrabold text-indigo-800">Why these suit your vibe (${s.mood.toUpperCase()}):</div>
-              <p class="leading-relaxed">${this.getVibeExplanation(s.mood)}</p>
-              <p class="text-xs text-slate-500 pt-1 italic">
+            <div class="bg-slate-100 rounded-2xl p-3.5 text-xs text-slate-900 space-y-1">
+              <div class="font-extrabold text-indigo-700">Why these suit your vibe (${s.mood.toUpperCase()}):</div>
+              <p class="leading-relaxed text-slate-700">${this.getVibeExplanation(s.mood)}</p>
+              <p class="text-xs text-slate-500 pt-1">
                 Note: Mood responses are private lifestyle suggestions, never displayed publicly or included in your reliability score.
               </p>
             </div>
@@ -1681,8 +1774,8 @@
 
       getVibeExplanation(mood) {
         const map = {
-          energetic: 'Since you feel Energetic, high-tempo games like Futsal, Badminton, Basketball, or Running are great ways to channel your momentum!',
-          happy: 'You’re in a Happy mood! Group sports and social hangouts around UMS are great for sharing good vibes with peers.',
+          energetic: 'Since you feel Energetic, high-tempo games like Futsal, Badminton, Basketball, or Running are great ways to channel your momentum.',
+          happy: 'You are in a Happy mood. Group sports and social hangouts around UMS are great for sharing good energy with peers.',
           calm: 'For a Calm state of mind, study groups at UMS Library or a scenic sunset walk/jog at ODEC Beach offer steady, focused company.',
           tired: 'Feeling Tired after lectures? Relaxed hangouts or low-intensity study pods let you socialise without physical exhaustion.',
           stressed: 'Feeling Stressed? Optional light exercise like a sunset coastal run or a low-pressure board game hangout can help you unwind.'
@@ -1707,20 +1800,22 @@
             <h2 class="text-lg font-extrabold text-slate-900">Inbox &amp; Notification Centre</h2>
 
             <div class="bg-slate-200 p-1 rounded-2xl flex text-xs font-bold">
-              <button onclick="app.setInboxTab('notifications')" class="flex-1 py-2 rounded-xl ${this.activeInboxTab === 'notifications' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}">
-                🔔 Notifications (${this.notifications.length})
+              <button onclick="app.setInboxTab('notifications')" class="flex-1 py-2 rounded-xl flex items-center justify-center gap-1.5 ${this.activeInboxTab === 'notifications' ? 'bg-white text-slate-900' : 'text-slate-600'}">
+                ${HUGE_ICONS.bell}
+                <span>Notifications (${this.notifications.length})</span>
               </button>
-              <button onclick="app.setInboxTab('messages')" class="flex-1 py-2 rounded-xl ${this.activeInboxTab === 'messages' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}">
-                💬 Activity Chats (${this.conversations.length})
+              <button onclick="app.setInboxTab('messages')" class="flex-1 py-2 rounded-xl flex items-center justify-center gap-1.5 ${this.activeInboxTab === 'messages' ? 'bg-white text-slate-900' : 'text-slate-600'}">
+                ${HUGE_ICONS.chat}
+                <span>Activity Chats (${this.conversations.length})</span>
               </button>
             </div>
 
             ${this.activeInboxTab === 'notifications' ? `
               <div class="space-y-2.5">
                 ${this.notifications.map(n => `
-                  <div onclick="app.handleNotificationClick('${n.id}')" class="bg-white border ${n.isRead ? 'border-slate-200' : 'border-indigo-300 bg-indigo-50/30'} rounded-2xl p-3.5 flex items-start gap-3 cursor-pointer hover:border-indigo-400 transition">
+                  <div onclick="app.handleNotificationClick('${n.id}')" class="bg-white border border-slate-200 rounded-2xl p-3.5 flex items-start gap-3 cursor-pointer transition-colors">
                     <div class="w-8 h-8 rounded-xl ${n.type === 'replacement' ? 'bg-rose-600' : 'bg-indigo-600'} text-white flex items-center justify-center text-xs font-bold shrink-0">
-                      ${n.type === 'replacement' ? '⚡' : '🔔'}
+                      ${n.type === 'replacement' ? HUGE_ICONS.bolt : HUGE_ICONS.bell}
                     </div>
                     <div class="flex-1 text-xs">
                       <div class="flex justify-between font-bold text-slate-900 mb-0.5">
@@ -1752,7 +1847,7 @@
             <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden flex flex-col h-[420px]">
               <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs">
                 <span class="font-bold text-slate-900">${conv.title}</span>
-                <button onclick="app.openActivityDetails('${conv.activityId}')" class="text-indigo-600 font-bold">Open Activity →</button>
+                <button onclick="app.openActivityDetails('${conv.activityId}')" class="text-indigo-600 font-bold">Open Activity</button>
               </div>
 
               <div class="flex-1 p-3 overflow-y-auto space-y-2.5 text-xs">
@@ -1782,27 +1877,33 @@
 
         return `
           <div class="p-4 space-y-4">
-            <div class="bg-white border border-slate-200 rounded-3xl p-5 text-center space-y-2 shadow-sm">
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 text-center space-y-2">
               <div class="flex justify-between items-center">
-                <span class="text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full">✓ UMS Verified Student</span>
-                <button onclick="navigateTo('settings')" class="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-xl">⚙️ Settings &amp; Safety</button>
+                <span class="text-xs font-bold bg-emerald-50 text-emerald-800 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  ${HUGE_ICONS.check}
+                  <span>UMS Verified Student</span>
+                </span>
+                <button onclick="navigateTo('settings')" class="text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-xl flex items-center gap-1">
+                  ${HUGE_ICONS.settings}
+                  <span>Settings &amp; Safety</span>
+                </button>
               </div>
 
-              <img src="${u.avatar}" class="w-16 h-16 rounded-full mx-auto ring-4 ring-indigo-50" alt="me" />
+              <img src="${u.avatar}" class="w-16 h-16 rounded-full mx-auto" alt="me" />
               <h3 class="text-base font-extrabold text-slate-900">${u.name}</h3>
               <p class="text-xs text-slate-500">${u.matricNumber} • ${u.faculty}</p>
               <p class="text-xs text-slate-600">${u.bio}</p>
 
               <div class="pt-2 flex justify-center gap-2">
-                <button onclick="app.openEditProfileModal()" class="px-3.5 py-1.5 bg-slate-100 text-slate-800 rounded-xl text-xs font-bold">Edit Profile</button>
-                <button onclick="navigateTo('subscription')" class="px-3.5 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-bold">
-                  💎 ${u.subscriptionPlan === 'plus' ? 'ActiMate Plus Active' : 'Upgrade to Plus (RM4.90)'}
+                <button onclick="app.openEditProfileModal()" class="px-3.5 py-2 bg-slate-100 text-slate-800 rounded-xl text-xs font-bold">Edit Profile</button>
+                <button onclick="navigateTo('subscription')" class="px-3.5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
+                  ${u.subscriptionPlan === 'plus' ? 'ActiMate Plus Active' : 'Upgrade to Plus (RM4.90)'}
                 </button>
               </div>
             </div>
 
-            <!-- Reliability Score Card -->
-            <div class="bg-gradient-to-br from-indigo-950 to-slate-900 text-white rounded-3xl p-4 space-y-3 shadow-md">
+            <!-- Reliability Score Card (Flat Solid Slate-900, Zero Gradients) -->
+            <div class="bg-slate-900 text-white rounded-3xl p-4 space-y-3">
               <div class="flex items-center justify-between">
                 <div>
                   <span class="text-xs font-bold text-emerald-400 uppercase">Fair Attendance Metric</span>
@@ -1811,26 +1912,26 @@
                 <div class="text-2xl font-black text-emerald-400">${u.reliabilityScore}<span class="text-xs text-slate-400">/100</span></div>
               </div>
 
-              <div class="grid grid-cols-3 gap-2 text-center text-xs bg-white/10 rounded-2xl p-2.5">
+              <div class="grid grid-cols-3 gap-2 text-center text-xs bg-slate-800 rounded-2xl p-2.5">
                 <div>
                   <span class="font-extrabold text-white block">${u.activitiesAttended}</span>
-                  <span class="text-slate-300">Attended</span>
+                  <span class="text-slate-400">Attended</span>
                 </div>
                 <div>
                   <span class="font-extrabold text-white block">${u.attendanceRate}%</span>
-                  <span class="text-slate-300">Attendance Rate</span>
+                  <span class="text-slate-400">Attendance Rate</span>
                 </div>
                 <div>
                   <span class="font-extrabold text-emerald-400 block">Dependable</span>
-                  <span class="text-slate-300">Status</span>
+                  <span class="text-slate-400">Status</span>
                 </div>
               </div>
 
               <p class="text-xs text-slate-300 leading-relaxed">
                 Calculated fairly from on-time attendance and timely notice. Never influenced by mood check-ins, popularity, or subscription plan.
               </p>
-              <button onclick="app.showReliabilityModal()" class="w-full py-2 bg-white/15 rounded-xl text-xs font-bold text-emerald-300">
-                View Reliability Rules →
+              <button onclick="app.showReliabilityModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold text-emerald-300 transition-colors">
+                View Reliability Rules
               </button>
             </div>
 
@@ -1838,7 +1939,7 @@
             <div class="bg-white border border-slate-200 rounded-3xl p-4 space-y-2 text-xs">
               <h4 class="font-extrabold text-slate-900">Preferred Activities &amp; Interests</h4>
               <div class="flex flex-wrap gap-1.5">
-                ${u.interests.map(i => `<span class="bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded-xl">${i}</span>`).join('')}
+                ${u.interests.map(i => `<span class="bg-slate-100 text-slate-800 font-bold px-2.5 py-1 rounded-xl">${i}</span>`).join('')}
               </div>
             </div>
 
@@ -1857,8 +1958,11 @@
         return `
           <div class="p-4 space-y-4">
             <div class="flex items-center justify-between">
-              <button onclick="navigateTo('profile')" class="text-xs font-bold text-slate-500">← Back to Profile</button>
-              <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Mock Subscription Demo</span>
+              <button onclick="navigateTo('profile')" class="text-xs font-bold text-slate-500 flex items-center gap-1">
+                ${HUGE_ICONS.arrowLeft}
+                <span>Back to Profile</span>
+              </button>
+              <span class="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full">Mock Subscription Demo</span>
             </div>
 
             <div>
@@ -1868,8 +1972,8 @@
 
             <!-- Billing Toggle -->
             <div class="bg-slate-200 p-1 rounded-2xl flex text-xs font-bold">
-              <button onclick="app.setBillingCycle('monthly')" class="flex-1 py-2 rounded-xl ${!isAnnual ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}">Monthly Billing</button>
-              <button onclick="app.setBillingCycle('annual')" class="flex-1 py-2 rounded-xl ${isAnnual ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}">Annual (Proposed 20% Student Discount)</button>
+              <button onclick="app.setBillingCycle('monthly')" class="flex-1 py-2 rounded-xl ${!isAnnual ? 'bg-white text-slate-900' : 'text-slate-600'}">Monthly Billing</button>
+              <button onclick="app.setBillingCycle('annual')" class="flex-1 py-2 rounded-xl ${isAnnual ? 'bg-white text-slate-900' : 'text-slate-600'}">Annual (Proposed 20% Student Discount)</button>
             </div>
 
             <!-- Free Plan -->
@@ -1878,16 +1982,16 @@
                 <h3 class="font-extrabold text-slate-900 text-sm">Free Plan</h3>
                 <span class="text-lg font-black text-slate-900">RM0</span>
               </div>
-              <ul class="space-y-1 text-slate-600">
-                <li>✓ Browse, join &amp; create activities</li>
-                <li>✓ Find replacement opportunities</li>
-                <li>✓ UMS account verification &amp; basic reliability score</li>
-                <li>✓ Standard activity reminders</li>
+              <ul class="space-y-1.5 text-slate-600">
+                <li>• Browse, join &amp; create activities</li>
+                <li>• Find replacement opportunities</li>
+                <li>• UMS account verification &amp; basic reliability score</li>
+                <li>• Standard activity reminders</li>
               </ul>
             </div>
 
-            <!-- ActiMate Plus -->
-            <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-3xl p-4 space-y-3 text-xs shadow-lg">
+            <!-- ActiMate Plus (Flat Solid Slate-900, Zero Gradients, Zero Shadows) -->
+            <div class="bg-slate-900 text-white rounded-3xl p-4 space-y-3 text-xs">
               <div class="flex justify-between items-center">
                 <div>
                   <span class="bg-emerald-500 text-slate-950 font-extrabold px-2 py-0.5 rounded-full text-xs">MOST POPULAR</span>
@@ -1895,21 +1999,21 @@
                 </div>
                 <div class="text-right">
                   <span class="text-xl font-black text-emerald-400">${isAnnual ? 'RM3.90' : 'RM4.90'}</span>
-                  <span class="text-slate-300 block">/month ${isAnnual ? '(RM46.80/yr)' : ''}</span>
+                  <span class="text-slate-400 block">/month ${isAnnual ? '(RM46.80/yr)' : ''}</span>
                 </div>
               </div>
-              <ul class="space-y-1 text-indigo-100">
-                <li>⚡ Instant alerts for matching vacant replacement slots</li>
-                <li>✨ Personalised mood-based recommendations</li>
-                <li>🔍 Advanced matching filters &amp; saved preferences</li>
-                <li>📊 Activity history &amp; participation statistics</li>
+              <ul class="space-y-1.5 text-slate-200">
+                <li>• Instant alerts for matching vacant replacement slots</li>
+                <li>• Personalised mood-based recommendations</li>
+                <li>• Advanced matching filters &amp; saved preferences</li>
+                <li>• Activity history &amp; participation statistics</li>
               </ul>
               ${this.user.subscriptionPlan === 'plus' ? `
-                <button onclick="app.switchSubscriptionPlan('free')" class="w-full py-2.5 bg-white/15 text-white font-bold rounded-xl">
+                <button onclick="app.switchSubscriptionPlan('free')" class="w-full py-2.5 bg-slate-800 text-white font-bold rounded-xl">
                   Active Plan • Click to Manage / Cancel Mock Plan
                 </button>
               ` : `
-                <button onclick="app.openUpgradeModal()" class="w-full py-2.5 bg-emerald-500 text-slate-950 font-extrabold rounded-xl shadow">
+                <button onclick="app.openUpgradeModal()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold rounded-xl transition-colors">
                   Upgrade to ActiMate Plus (Simulated Checkout)
                 </button>
               `}
@@ -1935,7 +2039,10 @@
         return `
           <div class="p-4 space-y-4 text-xs">
             <div class="flex items-center justify-between">
-              <button onclick="navigateTo('profile')" class="font-bold text-slate-500">← Back to Profile</button>
+              <button onclick="navigateTo('profile')" class="font-bold text-slate-500 flex items-center gap-1">
+                ${HUGE_ICONS.arrowLeft}
+                <span>Back to Profile</span>
+              </button>
               <span class="font-bold text-slate-400">Settings &amp; Safety</span>
             </div>
 
@@ -1959,9 +2066,9 @@
               <h4 class="font-extrabold text-slate-900 text-sm">Community &amp; Prototype Info</h4>
               <p class="text-slate-600">All payments, verification badges, and chats are simulated locally with mock state for lecturer demonstration.</p>
               <div class="pt-2 flex flex-col gap-2">
-                <button onclick="app.showReliabilityModal()" class="py-2 px-3 bg-slate-100 rounded-xl font-bold text-slate-800 text-left">🛡️ View Reliability &amp; Cancellation Rules</button>
-                <button onclick="app.resetData()" class="py-2 px-3 bg-slate-100 rounded-xl font-bold text-slate-800 text-left">↺ Reset Prototype Local Data</button>
-                <button onclick="navigateTo('onboarding')" class="py-2 px-3 bg-rose-50 text-rose-700 rounded-xl font-bold text-left">🚪 Sign Out to Welcome Screen</button>
+                <button onclick="app.showReliabilityModal()" class="py-2.5 px-3 bg-slate-100 rounded-xl font-bold text-slate-800 text-left">View Reliability &amp; Cancellation Rules</button>
+                <button onclick="app.resetData()" class="py-2.5 px-3 bg-slate-100 rounded-xl font-bold text-slate-800 text-left">Reset Prototype Local Data</button>
+                <button onclick="navigateTo('onboarding')" class="py-2.5 px-3 bg-rose-50 text-rose-700 rounded-xl font-bold text-left">Sign Out to Welcome Screen</button>
               </div>
             </div>
           </div>
@@ -1976,11 +2083,11 @@
           <div class="space-y-4 text-left text-xs">
             <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
               <h3 class="text-sm font-extrabold text-slate-900">Confirm Activity Participation</h3>
-              <button onclick="closeModal()" class="text-slate-400 font-bold">✕</button>
+              <button onclick="closeModal()" class="text-slate-400 font-bold">Close</button>
             </div>
             <div class="bg-slate-50 p-3 rounded-2xl space-y-1">
               <div class="font-extrabold text-slate-900 text-sm">${act.title}</div>
-              <div class="text-slate-600">📍 ${act.venue} • ${act.date}, ${act.time}</div>
+              <div class="text-slate-600">${act.venue} • ${act.date}, ${act.time}</div>
             </div>
             <div class="border border-slate-200 rounded-2xl p-3 space-y-1.5">
               <div class="flex justify-between">
@@ -1992,7 +2099,7 @@
                 <span class="font-bold">RM${act.commitmentDeposit}</span>
               </div>
             </div>
-            <p class="text-slate-500 italic">Demo notice: No real payment is processed. Confirming updates local mock state immediately.</p>
+            <p class="text-slate-500">Demo notice: No real payment is processed. Confirming updates local mock state immediately.</p>
             <div class="flex gap-2">
               <button onclick="closeModal()" class="flex-1 py-2.5 bg-slate-100 rounded-xl font-bold text-slate-700">Cancel</button>
               <button onclick="app.confirmJoin('${act.id}')" class="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl font-extrabold">Confirm &amp; Join</button>
@@ -2021,7 +2128,7 @@
         }
         closeModal();
         this.render();
-        this.toast(`🎉 Confirmed for ${act.title}! Participant count updated.`, 'success');
+        this.toast(`Confirmed for ${act.title}. Participant count updated.`, 'success');
       }
 
       toggleSaveActivity(activityId) {
@@ -2031,7 +2138,7 @@
           this.toast('Removed from Saved Activities', 'info');
         } else {
           this.user.savedActivityIds.push(activityId);
-          this.toast('❤️ Activity saved!', 'success');
+          this.toast('Activity saved to your list', 'success');
         }
         this.render();
       }
@@ -2040,10 +2147,10 @@
         openModal(`
           <div class="space-y-3 text-left text-xs">
             <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-              <h3 class="text-sm font-extrabold text-slate-900">🛡️ How Reliability Score Works</h3>
-              <button onclick="closeModal()" class="text-slate-400 font-bold">✕</button>
+              <h3 class="text-sm font-extrabold text-slate-900">How Reliability Score Works</h3>
+              <button onclick="closeModal()" class="text-slate-400 font-bold">Close</button>
             </div>
-            <p class="text-slate-600">ActiMate’s Reliability Score promotes fair attendance so UMS court bookings and group sessions aren't ruined by no-shows:</p>
+            <p class="text-slate-600">ActiMate’s Reliability Score promotes fair attendance so UMS court bookings and group sessions are not disrupted by no-shows:</p>
             <div class="space-y-1.5">
               <div class="p-2.5 bg-emerald-50 text-emerald-900 rounded-xl font-semibold">+3 pts • Attending confirmed activities on time</div>
               <div class="p-2.5 bg-indigo-50 text-indigo-900 rounded-xl font-semibold">+2 pts • Stepping in as a last-minute replacement</div>
@@ -2059,7 +2166,7 @@
       openUpgradeModal() {
         openModal(`
           <div class="space-y-3 text-left text-xs">
-            <h3 class="text-sm font-extrabold text-slate-900">💎 Upgrade to ActiMate Plus (Mock Demo)</h3>
+            <h3 class="text-sm font-extrabold text-slate-900">Upgrade to ActiMate Plus (Mock Demo)</h3>
             <p class="text-slate-600">Simulated student plan activation (RM4.90/month). No real payment credentials collected.</p>
             <div class="flex gap-2 pt-2">
               <button onclick="closeModal()" class="flex-1 py-2.5 bg-slate-100 rounded-xl font-bold">Cancel</button>
@@ -2072,7 +2179,7 @@
       switchSubscriptionPlan(plan) {
         this.user.subscriptionPlan = plan;
         this.render();
-        this.toast(plan === 'plus' ? '💎 ActiMate Plus activated (Mock State)!' : 'Switched to Free Student Plan', 'success');
+        this.toast(plan === 'plus' ? 'ActiMate Plus activated (Mock State)' : 'Switched to Free Student Plan', 'success');
       }
 
       setBillingCycle(cycle) {
@@ -2107,7 +2214,7 @@
         if (b) this.user.bio = b;
         closeModal();
         this.render();
-        this.toast('Profile updated!', 'success');
+        this.toast('Profile updated', 'success');
       }
 
       showReportModal() {
@@ -2133,7 +2240,7 @@
       completeOnboarding() {
         this.currentScreen = 'home';
         this.render();
-        this.toast('Welcome to ActiMate UMS Demo!', 'success');
+        this.toast('Welcome to ActiMate UMS Demo', 'success');
       }
 
       openActivityDetails(id) {
@@ -2281,7 +2388,7 @@
           nav.classList.remove('max-w-[430px]');
           nav.classList.add('max-w-4xl');
         }
-        label.innerText = '💻 Desktop View';
+        label.innerText = 'Desktop View';
       } else {
         wrapper.classList.add('max-w-[430px]');
         wrapper.classList.remove('max-w-4xl');
@@ -2289,7 +2396,7 @@
           nav.classList.add('max-w-[430px]');
           nav.classList.remove('max-w-4xl');
         }
-        label.innerText = '📱 Mobile View';
+        label.innerText = 'Mobile View';
       }
     }
 
@@ -2301,7 +2408,7 @@
       navigateTo('vibe');
     }
 
-    // Render immediately!
+    // Render immediately
     app.render();
   </script>
 </body>
